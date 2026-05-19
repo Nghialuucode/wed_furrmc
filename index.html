@@ -1,0 +1,1395 @@
+<!DOCTYPE html>
+<html lang="vi">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FURRMC NETWORK</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet">
+
+    <style>
+
+        *{
+            margin:0;
+            padding:0;
+            box-sizing:border-box;
+            -webkit-tap-highlight-color: transparent; /* Xóa bỏ khung viền xanh mặc định khi chạm trên di động */
+        }
+
+        html{
+            scroll-behavior:smooth;
+        }
+
+        body{
+            font-family:'Inter',sans-serif;
+            background:linear-gradient(180deg,#040406 0%,#09090f 40%,#050507 100%);
+            color:white;
+            overflow-x:hidden;
+            position:relative;
+        }
+
+        ::-webkit-scrollbar{
+            width:8px;
+        }
+
+        ::-webkit-scrollbar-track{
+            background:#09090f;
+        }
+
+        ::-webkit-scrollbar-thumb{
+            background:linear-gradient(180deg,#7c3aed,#d946ef);
+            border-radius:999px;
+        }
+
+        .bg-grid{
+            position:fixed;
+            inset:0;
+            background-image:
+                linear-gradient(rgba(255,255,255,.03) 1px,transparent 1px),
+                linear-gradient(90deg,rgba(255,255,255,.03) 1px,transparent 1px);
+            background-size:55px 55px;
+            mask-image:radial-gradient(circle at center,black 30%,transparent 95%);
+            z-index:-4;
+        }
+
+        .bg-glow{
+            position:fixed;
+            inset:0;
+            overflow:hidden;
+            pointer-events:none;
+            z-index:-3;
+        }
+
+        .glow{
+            position:absolute;
+            border-radius:50%;
+            filter:blur(120px);
+            opacity:.32;
+            animation:float 12s infinite ease-in-out;
+        }
+
+        .glow:nth-child(1){
+            width:350px;
+            height:350px;
+            background:#7c3aed;
+            top:-100px;
+            left:-100px;
+        }
+
+        .glow:nth-child(2){
+            width:300px;
+            height:300px;
+            background:#d946ef;
+            bottom:-100px;
+            right:-100px;
+            animation-delay:3s;
+        }
+
+        .glow:nth-child(3){
+            width:240px;
+            height:240px;
+            background:#9333ea;
+            top:40%;
+            left:35%;
+            animation-delay:6s;
+        }
+
+        @keyframes float{
+            0%,100%{
+                transform:translateY(0px);
+            }
+            50%{
+                transform:translateY(-25px);
+            }
+        }
+
+        .cursor-glow{
+            position:fixed;
+            width:260px;
+            height:260px;
+            background:radial-gradient(circle,rgba(168,85,247,.18),transparent 70%);
+            border-radius:50%;
+            transform:translate(-50%,-50%);
+            pointer-events:none;
+            z-index:-1;
+        }
+
+        .dynamic-header{
+            position:fixed;
+            top:18px;
+            left:0;
+            width:100%;
+            display:flex;
+            justify-content:center;
+            padding:0 14px;
+            z-index:9999;
+        }
+
+        .dynamic-island{
+            width:100%;
+            max-width:1200px;
+            display:flex;
+            align-items:center;
+            justify-content:space-between;
+            gap:20px;
+            padding:12px 24px;
+            border-radius:34px;
+            background:rgba(18,18,26,.65);
+            backdrop-filter:blur(22px) saturate(180%);
+            border:1px solid rgba(255,255,255,.08);
+            box-shadow:0 8px 40px rgba(0,0,0,.35);
+        }
+
+        .island-left{
+            display:flex;
+            align-items:center;
+            gap:14px;
+            cursor:pointer;
+        }
+
+        .island-logo{
+            width:46px;
+            height:46px;
+            object-fit:contain;
+            filter:drop-shadow(0 0 14px rgba(168,85,247,.4));
+            transition:.6s;
+        }
+
+        .island-left:hover .island-logo{
+            transform:rotateY(360deg);
+        }
+
+        .island-text h3{
+            font-size:24px;
+            font-family:'Space Grotesk',sans-serif;
+            font-weight:800;
+            display:flex;
+            gap:1px;
+        }
+
+        .island-text h3 span{
+            background:linear-gradient(135deg,#ffffff,#d8b4fe);
+            -webkit-background-clip:text;
+            -webkit-text-fill-color:transparent;
+        }
+
+        .island-text p{
+            font-size:12px;
+            color:#9ca3af;
+        }
+
+        .island-nav{
+            display:flex;
+            gap:28px;
+        }
+
+        .island-nav a{
+            text-decoration:none;
+            color:#d4d4d8;
+            font-weight:600;
+            position:relative;
+            transition:.3s;
+        }
+
+        .island-nav a:hover{
+            color:white;
+        }
+
+        .island-buttons{
+            display:flex;
+            gap:8px;
+            align-items:center;
+        }
+
+        .island-btn{
+            height:44px;
+            padding:0 16px;
+            border-radius:16px;
+            display:flex;
+            align-items:center;
+            justify-content:center;
+            font-size:13px;
+            font-weight:700;
+            cursor:pointer;
+            border:none;
+            color:white;
+            text-decoration:none;
+            transition:.3s;
+        }
+
+        .island-btn:active {
+            transform: scale(0.95) !important;
+        }
+
+        .island-copy{
+            background:rgba(255,255,255,.05);
+            border:1px solid rgba(255,255,255,.08);
+        }
+
+        .island-copy:hover{
+            background:rgba(255,255,255,.1);
+            transform:translateY(-2px);
+        }
+
+        .btn-cosmic{
+            position:relative;
+            overflow:hidden;
+            background:#111118;
+        }
+
+        .btn-cosmic::before{
+            content:'';
+            position:absolute;
+            inset:-100%;
+            background:conic-gradient(from 0deg,transparent 20%,#7c3aed,#d946ef,transparent 80%);
+            animation:spin 4s linear infinite;
+        }
+
+        .btn-cosmic::after{
+            content:'';
+            position:absolute;
+            inset:2px;
+            background:#111118;
+            border-radius:14px;
+        }
+
+        .btn-cosmic span{
+            position:relative;
+            z-index:2;
+        }
+
+        @keyframes spin{
+            100%{
+                transform:rotate(360deg);
+            }
+        }
+
+        .hero{
+            min-height:100vh;
+            display:flex;
+            align-items:center;
+            justify-content:center;
+            padding:170px 20px 100px;
+            text-align:center;
+        }
+
+        .hero-content{
+            max-width:980px;
+        }
+
+        .hero-badge{
+            display:inline-flex;
+            padding:10px 18px;
+            border-radius:999px;
+            background:rgba(255,255,255,.05);
+            border:1px solid rgba(255,255,255,.08);
+            margin-bottom:28px;
+        }
+
+        .hero h1{
+            font-size:95px;
+            line-height:1;
+            font-family:'Space Grotesk',sans-serif;
+            margin-bottom:26px;
+            background:linear-gradient(135deg,#ffffff 20%,#d8b4fe 50%,#d946ef 100%);
+            -webkit-background-clip:text;
+            -webkit-text-fill-color:transparent;
+        }
+
+        .hero p{
+            font-size:22px;
+            line-height:1.8;
+            color:#d4d4d8;
+        }
+
+        .hero-buttons{
+            display:flex;
+            justify-content:center;
+            gap:14px;
+            margin-top:42px;
+            flex-wrap:wrap;
+        }
+
+        .btn{
+            height:56px;
+            padding:0 28px;
+            display:inline-flex;
+            align-items:center;
+            justify-content:center;
+            text-decoration:none;
+            font-size:15px;
+            font-weight:700;
+            border-radius:18px;
+            transition:.35s;
+            cursor: pointer;
+        }
+
+        .btn:active {
+            transform: scale(0.96) translateY(0px) !important;
+        }
+
+        .btn-dark{
+            background:rgba(255,255,255,.05);
+            border:1px solid rgba(255,255,255,.08);
+            color:white;
+        }
+
+        .btn-dark:hover{
+            transform:translateY(-4px);
+            background:rgba(255,255,255,.1);
+        }
+
+        .btn-discord {
+            background: #5865F2;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            color: white;
+        }
+
+        .btn-discord:hover {
+            background: #4752c4;
+            transform: translateY(-4px);
+            box-shadow: 0 0 20px rgba(88, 101, 242, 0.4);
+        }
+
+        .hero-stats{
+            display:flex;
+            justify-content:center;
+            gap:18px;
+            margin-top:60px;
+            flex-wrap:wrap;
+        }
+
+        .stat-box{
+            min-width:180px;
+            background:rgba(255,255,255,.04);
+            border:1px solid rgba(255,255,255,.06);
+            border-radius:26px;
+            padding:24px;
+        }
+
+        .stat-box h3{
+            font-size:36px;
+            margin-bottom:6px;
+            font-family:'Space Grotesk',sans-serif;
+        }
+
+        .stat-box p{
+            font-size:14px;
+            color:#9ca3af;
+        }
+
+        section{
+            padding:90px 20px;
+        }
+
+        .container{
+            max-width:1200px;
+            margin:auto;
+        }
+
+        .section-title{
+            text-align:center;
+            margin-bottom:60px;
+        }
+
+        .section-title h2{
+            font-size:58px;
+            font-family:'Space Grotesk',sans-serif;
+            margin-bottom:16px;
+        }
+
+        .section-title p{
+            color:#9ca3af;
+        }
+
+        .modes-grid,
+        .features-grid{
+            display:grid;
+            grid-template-columns:repeat(auto-fit,minmax(260px,1fr));
+            gap:24px;
+        }
+
+        /* HỆ THỐNG PANEL (CARDS) CHỐNG PHÔNG XANH GG */
+        .mode-card,
+        .feature-card,
+        .community-card-custom {
+            position: relative;
+            background: rgba(18, 18, 26, 0.85);
+            border-radius: 30px;
+            padding: 32px;
+            transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275), box-shadow 0.4s ease, border-color 0.4s;
+            overflow: hidden;
+            z-index: 1;
+            cursor: pointer;
+            border: 1px solid rgba(255, 255, 255, 0.06);
+        }
+
+        /* Lớp dải màu viền chuyển động - Thay hoàn toàn sắc lục sang tím/hồng */
+        .mode-card::before,
+        .feature-card::before,
+        .community-card-custom::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: conic-gradient(from 0deg, transparent 30%, #7c3aed 50%, #d946ef 70%, transparent 100%);
+            animation: borderRotate 6s linear infinite;
+            z-index: -2;
+            opacity: 0;
+            transition: opacity 0.4s ease;
+        }
+
+        /* Lớp nền tối phía trong */
+        .mode-card::after,
+        .feature-card::after,
+        .community-card-custom::after {
+            content: '';
+            position: absolute;
+            inset: 1.5px; 
+            background: #0d0d14;
+            border-radius: 28.5px;
+            z-index: -1;
+            transition: background 0.3s ease;
+        }
+
+        /* HIỆU ỨNG NỔI BẬT LÊN (KHI DI CHUỘT / HOẶC CHẠM TRÊN ĐIỆN THOẠI) */
+        .mode-card:hover,
+        .feature-card:hover,
+        .community-card-custom:hover,
+        .mode-card:active,
+        .feature-card:active,
+        .community-card-custom:active {
+            transform: translateY(-12px) scale(1.02);
+            box-shadow: 0 20px 45px rgba(168, 85, 247, 0.35); /* Đổ bóng phát quang tím hồng mạnh */
+            border-color: transparent;
+        }
+
+        /* Hiện viền chạy khi tương tác */
+        .mode-card:hover::before,
+        .feature-card:hover::before,
+        .community-card-custom:hover::before,
+        .mode-card:active::before,
+        .feature-card:active::before,
+        .community-card-custom:active::before {
+            opacity: 1;
+        }
+
+        @keyframes borderRotate {
+            100% {
+                transform: rotate(360deg);
+            }
+        }
+
+        .mode-card *, .feature-card *, .community-card-custom * {
+            position: relative;
+            z-index: 2;
+        }
+
+        .mode-icon,
+        .feature-icon{
+            width:72px;
+            height:72px;
+            border-radius:22px;
+            display:flex;
+            align-items:center;
+            justify-content:center;
+            font-size:34px;
+            margin-bottom:24px;
+            background:#7c3aed22;
+        }
+
+        .mode-card h3{
+            font-size:34px;
+            margin-bottom:14px;
+            font-family:'Space Grotesk',sans-serif;
+        }
+
+        .mode-card p,
+        .feature-card p{
+            line-height:1.9;
+            color:#d4d4d8;
+        }
+
+        .join-box{
+            background:linear-gradient(180deg,rgba(124,58,237,.14),rgba(255,255,255,.03));
+            border:1px solid rgba(255,255,255,.08);
+            border-radius:36px;
+            padding:64px 24px;
+            text-align:center;
+        }
+
+        .join-box h3{
+            font-size:54px;
+            margin-bottom:20px;
+            font-family:'Space Grotesk',sans-serif;
+        }
+
+        .ip-container {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 28px;
+        }
+
+        .ip{
+            font-size:46px;
+            font-weight:900;
+            color:#d8b4fe;
+            line-height: 1.2;
+        }
+
+        .port-group-flex {
+            display: flex;
+            gap: 12px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .port-pe {
+            font-size: 22px;
+            font-weight: 700;
+            color: #e9d5ff;
+            background: rgba(168, 85, 247, 0.15);
+            padding: 6px 20px;
+            border-radius: 999px;
+            border: 1px solid rgba(168, 85, 247, 0.3);
+            display: inline-block;
+        }
+
+        .version-container {
+            display: flex;
+            gap: 14px;
+            justify-content: center;
+            align-items: center;
+            margin-top: 4px;
+            flex-wrap: wrap;
+        }
+
+        .version-badge {
+            font-size: 14px;
+            font-weight: 600;
+            color: #f3e8ff;
+            background: rgba(255, 255, 255, 0.04);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            padding: 5px 16px;
+            border-radius: 12px;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .version-badge span {
+            color: #c084fc;
+            font-weight: 700;
+        }
+
+        .community-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 28px;
+            max-width: 1100px;
+            margin: auto;
+        }
+
+        .community-card-custom {
+            padding: 40px 32px;
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        /* Loại bỏ màu xanh lá cây ở viền để chống phông xanh */
+        .card-discord:hover::before, .card-discord:active::before {
+            background: conic-gradient(from 0deg, transparent 30%, #5865F2 50%, #8a94f5 70%, transparent 100%);
+        }
+        .card-facebook:hover::before, .card-facebook:active::before {
+            background: conic-gradient(from 0deg, transparent 30%, #1877F2 50%, #5ba2f8 70%, transparent 100%);
+        }
+        .card-support:hover::before, .card-support:active::before {
+            background: conic-gradient(from 0deg, transparent 30%, #a855f7 50%, #ec4899 70%, transparent 100%);
+        }
+
+        .com-icon {
+            font-size: 48px;
+            margin-bottom: 20px;
+        }
+
+        .community-card-custom h3 {
+            font-size: 28px;
+            font-family: 'Space Grotesk', sans-serif;
+            margin-bottom: 12px;
+        }
+
+        .community-card-custom p {
+            font-size: 15px;
+            color: #a1a1aa;
+            line-height: 1.7;
+            margin-bottom: 28px;
+        }
+
+        .badge-online {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: rgba(168, 85, 247, 0.15);
+            color: #c084fc;
+            padding: 6px 16px;
+            border-radius: 999px;
+            font-weight: 700;
+            font-size: 13px;
+            border: 1px solid rgba(168, 85, 247, 0.3);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            animation: pulseGlow 2s infinite ease-in-out;
+        }
+
+        @keyframes pulseGlow {
+            0%, 100% { opacity: 0.9; transform: scale(1); }
+            50% { opacity: 1; transform: scale(1.03); box-shadow: 0 0 15px rgba(168, 85, 247, 0.2); }
+        }
+
+        .btn-link {
+            width: 100%;
+            height: 50px;
+            border-radius: 16px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            text-decoration: none;
+            font-weight: 700;
+            font-size: 14px;
+            transition: 0.3s;
+        }
+        .btn-link:active {
+            transform: scale(0.95);
+        }
+
+        .btn-link-discord { background: #5865F2; color: white; }
+        .btn-link-discord:hover { background: #4752c4; }
+
+        .btn-link-facebook { background: #1877F2; color: white; }
+        .btn-link-facebook:hover { background: #1464cb; }
+
+        .copy-group-flex {
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+            width: 100%;
+        }
+
+        .btn-sub-copy {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            color: white;
+            font-size: 13px;
+            font-weight: 600;
+            padding: 10px 16px;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: 0.2s;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .btn-sub-copy:hover {
+            background: rgba(168, 85, 247, 0.15);
+            border-color: #a855f7;
+        }
+        .btn-sub-copy:active {
+            transform: scale(0.95);
+        }
+
+        footer{
+            padding:70px 20px;
+            border-top:1px solid rgba(255,255,255,.05);
+        }
+
+        .footer-content{
+            max-width:1200px;
+            margin:auto;
+            display:flex;
+            justify-content:space-between;
+            gap:40px;
+            flex-wrap:wrap;
+        }
+
+        .footer-brand h3{
+            font-size:38px;
+            margin-bottom:16px;
+            font-family:'Space Grotesk',sans-serif;
+        }
+
+       .footer-brand p{
+            line-height:1.8;
+            color:#9ca3af;
+        }
+
+        .copy-toast{
+            position:fixed;
+            bottom:30px;
+            left:50%;
+            transform:translateX(-50%);
+            background:rgba(17,17,24,.95);
+            border:1px solid rgba(168,85,247,.4);
+            padding:14px 24px;
+            border-radius:16px;
+            z-index:999999;
+            font-weight:700;
+            box-shadow:0 0 30px rgba(168,85,247,.35);
+        }
+
+        .music-control-btn {
+            position: fixed;
+            bottom: 24px;
+            right: 24px;
+            z-index: 10000;
+            background: rgba(18, 18, 26, 0.7);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(12px);
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            box-shadow: 0 4px 24px rgba(0, 0, 0, 0.4);
+            transition: all 0.3s ease;
+            font-size: 20px;
+            user-select: none;
+        }
+
+        .music-control-btn:hover {
+            transform: scale(1.1);
+            border-color: #a855f7;
+            box-shadow: 0 0 15px rgba(168, 85, 247, 0.4);
+        }
+        .music-control-btn:active {
+            transform: scale(0.9);
+        }
+
+        @media(max-width:980px){
+
+            .island-nav{
+                display:none;
+            }
+
+            .hero h1{
+                font-size:58px;
+            }
+
+            .hero p{
+                font-size:17px;
+            }
+
+            .section-title h2{
+                font-size:42px;
+            }
+        }
+
+        @media(max-width:600px){
+
+            .dynamic-island {
+                padding: 10px 16px;
+            }
+
+            .hero{
+                padding:150px 16px 80px;
+            }
+
+            .hero h1{
+                font-size:44px;
+            }
+
+            .hero p{
+                font-size:15px;
+            }
+
+            .join-box h3{
+                font-size:38px;
+            }
+
+            .ip{
+                font-size:34px;
+                word-break:break-word;
+            }
+
+            .port-pe {
+                font-size: 18px;
+            }
+
+            .version-container {
+                gap: 8px;
+            }
+
+            .version-badge {
+                font-size: 12px;
+                padding: 4px 12px;
+            }
+
+            .mode-card,
+            .feature-card,
+            .community-card-custom{
+                padding:28px 20px;
+            }
+
+            .mode-card::after,
+            .feature-card::after,
+            .community-card-custom::after {
+                border-radius: 28.5px;
+            }
+            
+            .music-control-btn {
+                bottom: 16px;
+                right: 16px;
+                width: 44px;
+                height: 44px;
+                font-size: 18px;
+            }
+
+            .copy-group-flex {
+                flex-direction: column;
+                gap: 8px;
+            }
+        }
+
+    </style>
+
+</head>
+
+<body>
+
+    <audio id="bg-audio" loop prefetch>
+        <source src="music.mp3" type="audio/mpeg">
+    </audio>
+
+    <div id="music-toggle" class="music-control-btn" title="Bật/Tắt nhạc nền">🔇</div>
+
+    <div class="bg-grid"></div>
+
+    <div class="bg-glow">
+        <div class="glow"></div>
+        <div class="glow"></div>
+        <div class="glow"></div>
+    </div>
+
+    <div class="cursor-glow"></div>
+
+    <header class="dynamic-header">
+
+        <div class="dynamic-island">
+
+            <div class="island-left" onclick="window.scrollTo({top:0,behavior:'smooth'})">
+
+                <img src="logo_furrmc.png" class="island-logo" alt="FurrMC Logo">
+
+                <div class="island-text">
+
+                    <h3>
+                        <span>F</span>
+                        <span>U</span>
+                        <span>R</span>
+                        <span>R</span>
+                        <span>M</span>
+                        <span>C</span>
+                    </h3>
+
+                    <p>Minecraft Network</p>
+
+                </div>
+
+            </div>
+
+            <nav class="island-nav">
+                <a href="#">Trang chủ</a>
+                <a href="#modes">Server</a>
+                <a href="#features">Tính năng</a>
+                <a href="#download">Tải Game</a>
+                <a href="#community">Cộng đồng</a>
+            </nav>
+
+            <div class="island-buttons">
+
+                <button class="island-btn island-copy copy-btn" data-copy="FurrMC.com">
+                    PC
+                </button>
+                <button class="island-btn island-copy copy-btn" data-copy="FurrMC.com:19132">
+                    PE
+                </button>
+
+                <a href="https://discord.gg/RfFxJ5NTN4" target="_blank" class="island-btn btn-cosmic">
+                    <span>Discord</span>
+                </a>
+
+            </div>
+
+        </div>
+
+    </header>
+
+    <section class="hero">
+
+        <div class="hero-content">
+
+            <div class="hero-badge">
+                ✨ Minecraft Server Việt Nam
+            </div>
+
+            <h1>FURRMC NETWORK</h1>
+
+            <p>
+                Trải nghiệm máy chủ Minecraft hiện đại với hệ thống SMP,
+                RPG, ECO và PvP tối ưu dành cho cả Java lẫn Bedrock.
+            </p>
+
+            <div class="hero-buttons">
+
+                <button class="btn btn-dark copy-btn" data-copy="FurrMC.com">
+                    💻 Copy IP PC
+                </button>
+                
+                <button class="btn btn-dark copy-btn" data-copy="FurrMC.com:19132">
+                    📱 Copy IP PE
+                </button>
+
+                <a href="https://discord.gg/RfFxJ5NTN4" target="_blank" class="btn btn-discord">
+                    Tham Gia Discord
+                </a>
+
+            </div>
+
+            <div class="hero-stats">
+
+                <div class="stat-box">
+                    <h3>24/7</h3>
+                    <p>Online ổn định</p>
+                </div>
+
+                <div class="stat-box">
+                    <h3>1.21+</h3>
+                    <p>Hỗ trợ phiên bản mới</p>
+                </div>
+
+                <div class="stat-box">
+                    <h3>Java + BE</h3>
+                    <p>Hỗ trợ mọi nền tảng</p>
+                </div>
+
+            </div>
+
+        </div>
+
+    </section>
+
+    <section id="modes">
+
+        <div class="container">
+
+            <div class="section-title">
+                <h2>Chế Độ Server</h2>
+                <p>Khám phá các chế độ hấp dẫn tại FurrMC</p>
+            </div>
+
+            <div class="modes-grid">
+
+                <div class="mode-card">
+                    <div class="mode-icon">🔥</div>
+                    <h3>SMP</h3>
+                    <p>Survival sinh tồn hiện đại với nhiều tính năng độc quyền.</p>
+                </div>
+
+                <div class="mode-card">
+                    <div class="mode-icon">🪄</div>
+                    <h3>RPG</h3>
+                    <p>Phiêu lưu fantasy với kỹ năng, quái vật và dungeon.</p>
+                </div>
+
+                <div class="mode-card">
+                    <div class="mode-icon">💰</div>
+                    <h3>ECO</h3>
+                    <p>Hệ thống kinh tế tự do, buôn bán và phát triển tài sản.</p>
+                </div>
+
+                <div class="mode-card">
+                    <div class="mode-icon">⚔️</div>
+                    <h3>PVP</h3>
+                    <p>Chiến đấu căng thẳng với nhiều arena và kit đa dạng.</p>
+                </div>
+
+            </div>
+
+        </div>
+
+    </section>
+
+    <section>
+
+        <div class="container">
+
+            <div class="join-box">
+
+                <h3>Tham Gia Ngay</h3>
+
+                <div class="ip-container">
+                    <div class="ip">IP: FurrMC.com</div>
+                    
+                    <div class="port-group-flex">
+                        <div class="port-pe">Port PE: 19132</div>
+                    </div>
+
+                    <div class="version-container">
+                        <div class="version-badge">💻 Java: <span>1.21.7+</span></div>
+                        <div class="version-badge">📱 Bedrock: <span>1.21.130+</span></div>
+                    </div>
+                </div>
+
+                <div class="copy-group-flex" style="max-width: 500px; margin: 0 auto;">
+                    <button class="btn btn-dark copy-btn" data-copy="FurrMC.com" style="flex: 1; height: 50px;">
+                        💻 Copy IP PC
+                    </button>
+                    <button class="btn btn-dark copy-btn" data-copy="FurrMC.com:19132" style="flex: 1; height: 50px;">
+                        📱 Copy IP PE
+                    </button>
+                </div>
+
+            </div>
+
+        </div>
+
+    </section>
+
+    <section id="features">
+
+        <div class="container">
+
+            <div class="section-title">
+                <h2>Tính Năng</h2>
+                <p>Những hệ thống nổi bật của FurrMC</p>
+            </div>
+
+            <div class="features-grid">
+
+                <div class="feature-card">
+                    <div class="feature-icon">🚀</div>
+                    <h4>Tối Ưu Cao</h4>
+                    <p>Máy chủ ổn định, ping thấp và tối ưu trải nghiệm.</p>
+                </div>
+
+                <div class="feature-card">
+                    <div class="feature-icon">🛡️</div>
+                    <h4>Bảo Mật</h4>
+                    <p>Hệ thống chống hack và bảo vệ dữ liệu người chơi.</p>
+                </div>
+
+                <div class="feature-card">
+                    <div class="feature-icon">🎁</div>
+                    <h4>Sự Kiện</h4>
+                    <p>Nhiều event hấp dẫn cùng phần thưởng độc quyền.</p>
+                </div>
+
+                <div class="feature-card">
+                    <div class="feature-icon">🌎</div>
+                    <h4>Đa Nền Tảng</h4>
+                    <p>Chơi được trên Java và Bedrock mọi thiết bị.</p>
+                </div>
+
+            </div>
+
+        </div>
+
+    </section>
+
+    <section id="download">
+
+        <div class="container">
+
+            <div class="section-title">
+                <h2>Tải Minecraft</h2>
+                <p>Tải phiên bản phù hợp để tham gia server</p>
+            </div>
+
+            <div class="features-grid">
+
+                <div class="feature-card">
+
+                    <div class="feature-icon">📱</div>
+
+                    <h4>Minecraft Thường</h4>
+
+                    <p>
+                        Phiên bản Minecraft dành cho người chơi thông thường.
+                    </p>
+
+                    <a href="https://www.mediafire.com/file/tymbtge96v16yk9/minecraft-1.26.20.4_Furrmc.apk/file"
+                       target="_blank"
+                       class="btn btn-dark"
+                       style="width:100%;margin-top:18px;">
+
+                        Tải Minecraft
+
+                    </a>
+
+                </div>
+
+                <div class="feature-card">
+
+                    <div class="feature-icon">⚡</div>
+
+                    <h4>Minecraft Patch</h4>
+
+                    <p>
+                        Phiên bản patched hỗ trợ đầy đủ tính năng cho FurrMC.
+                    </p>
+
+                    <a href="https://www.mediafire.com/file/anjuvy8vvgr6031/MCPE-Patched_FurrMC.apk/file"
+                       target="_blank"
+                       class="btn btn-dark"
+                       style="width:100%;margin-top:18px;">
+
+                        Tải Bản Patch
+
+                    </a>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </section>
+
+    <section id="community">
+
+        <div class="container">
+
+            <div class="section-title">
+                <h2>Cộng Đồng & Hỗ Trợ</h2>
+                <p>Kết nối với ban quản trị và các thành viên khác</p>
+            </div>
+
+            <div class="community-grid">
+
+                <div class="community-card-custom card-discord">
+                    <div>
+                        <div class="com-icon">💬</div>
+                        <h3>Discord Server</h3>
+                        <p>Kênh giao lưu chính thức, cập nhật thông báo sớm nhất, tìm đồng đội và báo lỗi trực tiếp.</p>
+                    </div>
+                    <a href="https://discord.gg/RfFxJ5NTN4" target="_blank" class="btn-link btn-link-discord">Tham Gia Ngay</a>
+                </div>
+
+                <div class="community-card-custom card-facebook">
+                    <div>
+                        <div class="com-icon">👍</div>
+                        <h3>Fanpage Facebook</h3>
+                        <p>Theo dõi tin tức sự kiện, bài viết highlight và các hoạt động cộng đồng nổi bật trên mạng xã hội.</p>
+                    </div>
+                    <a href="https://www.facebook.com/share/g/14WmBX5kuEQ/" target="_blank" class="btn-link btn-link-facebook">Ghé Thăm Trang</a>
+                </div>
+
+                <div class="community-card-custom card-support">
+                    <div>
+                        <div class="com-icon">🛡️</div>
+                        <h3>Hỗ Trợ Người Chơi</h3>
+                        <p>Ban quản trị hoạt động liên tục nhằm giải quyết mọi thắc mắc và nhanh chóng kết nối tài khoản IP.</p>
+                        
+                        <div class="copy-group-flex" style="margin-top: 15px;">
+                            <button class="btn-sub-copy copy-btn" data-copy="FurrMC.com">💻 Copy PC</button>
+                            <button class="btn-sub-copy copy-btn" data-copy="FurrMC.com:19132">📱 Copy PE</button>
+                        </div>
+                    </div>
+                    <div class="badge-online" style="margin-top:20px;">⚡ Hỗ Trợ 24/7</div>
+                </div>
+
+            </div>
+
+        </div>
+
+    </section>
+
+    <footer>
+
+        <div class="footer-content">
+
+            <div class="footer-brand">
+
+                <h3>FURRMC NETWORK</h3>
+
+                <p>
+                    Máy chủ Minecraft Việt Nam hiện đại,<br>
+                    hỗ trợ Java và Bedrock.
+                </p>
+
+            </div>
+
+            <div class="footer-brand">
+
+                <h3>Bản Quyền</h3>
+
+                <p>
+                    © 2026 FurrMC Network<br>
+                    Website được phát triển và khởi chạy vào Thứ Ba, ngày 19 tháng 5 năm 2026 bởi EvB_Nghia
+                </p>
+
+            </div>
+
+        </div>
+
+    </footer>
+
+    <script>
+
+        const cursorGlow = document.querySelector('.cursor-glow');
+
+        document.addEventListener('mousemove',(e)=>{
+
+            cursorGlow.style.left = e.clientX + 'px';
+            cursorGlow.style.top = e.clientY + 'px';
+
+        });
+
+        async function copyText(text){
+
+            try{
+
+                await navigator.clipboard.writeText(text);
+
+                showToast("Đã sao chép: " + text);
+
+            }catch(err){
+
+                const textarea = document.createElement("textarea");
+
+                textarea.value = text;
+
+                document.body.appendChild(textarea);
+
+                textarea.select();
+
+                document.execCommand("copy");
+
+                document.body.removeChild(textarea);
+
+                showToast("Đã sao chép: " + text);
+            }
+        }
+
+        function showToast(message){
+
+            const oldToast = document.querySelector('.copy-toast');
+
+            if(oldToast){
+                oldToast.remove();
+            }
+
+            const toast = document.createElement('div');
+
+            toast.className = 'copy-toast';
+
+            toast.innerText = message;
+
+            document.body.appendChild(toast);
+
+            setTimeout(()=>{
+
+                toast.style.transition = '.4s';
+                toast.style.opacity = '0';
+
+                setTimeout(()=>{
+
+                    toast.remove();
+
+                },400);
+
+            },1800);
+        }
+
+        document.querySelectorAll('.copy-btn').forEach((button)=>{
+
+            button.addEventListener('click',(e)=>{
+                e.preventDefault();
+                const text = button.getAttribute('data-copy');
+
+                copyText(text);
+
+            });
+
+        });
+
+        // ==========================================
+        // HỆ THỐNG XỬ LÝ NHẠC NỀN TOÀN DIỆN (MOBILE)
+        // ==========================================
+        const audio = document.getElementById('bg-audio');
+        const musicToggle = document.getElementById('music-toggle');
+        
+        audio.volume = 0.4; 
+
+        if (localStorage.getItem('musicState') !== 'paused') {
+            localStorage.setItem('musicState', 'playing');
+        }
+
+        function tryPlayMusic() {
+            if (localStorage.getItem('musicState') === 'playing') {
+                audio.play().then(() => {
+                    musicToggle.innerText = '🔊';
+                    removeInteractionListeners(); // Nhạc phát thành công thì gỡ bỏ lắng nghe để tránh lặp lệnh
+                }).catch(error => {
+                    console.log("Trình duyệt chặn phát tự động, đang chờ bất kỳ chạm phản hồi...");
+                });
+            } else {
+                musicToggle.innerText = '🔇';
+            }
+        }
+
+        function removeInteractionListeners() {
+            window.removeEventListener('click', tryPlayMusic);
+            window.removeEventListener('scroll', tryPlayMusic);
+            window.removeEventListener('touchstart', tryPlayMusic);
+            window.removeEventListener('touchend', tryPlayMusic);
+            window.removeEventListener('resize', tryPlayMusic);
+            document.removeEventListener('keydown', tryPlayMusic);
+        }
+
+        // Tự động quét khi load trang
+        window.addEventListener('DOMContentLoaded', tryPlayMusic);
+        window.addEventListener('load', tryPlayMusic);
+
+        // Lắng nghe trên mọi ngóc ngách màn hình & tương tác vật lý (như bấm nút âm lượng gây thay đổi kích thước nhẹ)
+        window.addEventListener('click', tryPlayMusic);
+        window.addEventListener('scroll', tryPlayMusic);
+        window.addEventListener('touchstart', tryPlayMusic);
+        window.addEventListener('touchend', tryPlayMusic);
+        window.addEventListener('resize', tryPlayMusic); 
+        document.addEventListener('keydown', tryPlayMusic);
+
+        // Tác vụ nút tắt/mở nhanh
+        musicToggle.addEventListener('click', (e) => {
+            e.stopPropagation(); 
+            
+            if (audio.paused) {
+                audio.play();
+                musicToggle.innerText = '🔊';
+                localStorage.setItem('musicState', 'playing'); 
+            } else {
+                audio.pause();
+                musicToggle.innerText = '🔇';
+                localStorage.setItem('musicState', 'paused');  
+            }
+        });
+
+    </script>
+
+</body>
+
+</html>
