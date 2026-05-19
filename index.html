@@ -1,0 +1,991 @@
+<!DOCTYPE html>
+<html lang="vi">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FURRMC NETWORK</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet">
+
+    <style>
+
+        *{
+            margin:0;
+            padding:0;
+            box-sizing:border-box;
+        }
+
+        html{
+            scroll-behavior:smooth;
+        }
+
+        body{
+            font-family:'Inter',sans-serif;
+            background:linear-gradient(180deg,#040406 0%,#09090f 40%,#050507 100%);
+            color:white;
+            overflow-x:hidden;
+            position:relative;
+        }
+
+        ::-webkit-scrollbar{
+            width:8px;
+        }
+
+        ::-webkit-scrollbar-track{
+            background:#09090f;
+        }
+
+        ::-webkit-scrollbar-thumb{
+            background:linear-gradient(180deg,#7c3aed,#d946ef);
+            border-radius:999px;
+        }
+
+        .bg-grid{
+            position:fixed;
+            inset:0;
+            background-image:
+                linear-gradient(rgba(255,255,255,.03) 1px,transparent 1px),
+                linear-gradient(90deg,rgba(255,255,255,.03) 1px,transparent 1px);
+            background-size:55px 55px;
+            mask-image:radial-gradient(circle at center,black 30%,transparent 95%);
+            z-index:-4;
+        }
+
+        .bg-glow{
+            position:fixed;
+            inset:0;
+            overflow:hidden;
+            pointer-events:none;
+            z-index:-3;
+        }
+
+        .glow{
+            position:absolute;
+            border-radius:50%;
+            filter:blur(120px);
+            opacity:.32;
+            animation:float 12s infinite ease-in-out;
+        }
+
+        .glow:nth-child(1){
+            width:350px;
+            height:350px;
+            background:#7c3aed;
+            top:-100px;
+            left:-100px;
+        }
+
+        .glow:nth-child(2){
+            width:300px;
+            height:300px;
+            background:#d946ef;
+            bottom:-100px;
+            right:-100px;
+            animation-delay:3s;
+        }
+
+        .glow:nth-child(3){
+            width:240px;
+            height:240px;
+            background:#9333ea;
+            top:40%;
+            left:35%;
+            animation-delay:6s;
+        }
+
+        @keyframes float{
+            0%,100%{
+                transform:translateY(0px);
+            }
+            50%{
+                transform:translateY(-25px);
+            }
+        }
+
+        .cursor-glow{
+            position:fixed;
+            width:260px;
+            height:260px;
+            background:radial-gradient(circle,rgba(168,85,247,.18),transparent 70%);
+            border-radius:50%;
+            transform:translate(-50%,-50%);
+            pointer-events:none;
+            z-index:-1;
+        }
+
+        .dynamic-header{
+            position:fixed;
+            top:18px;
+            left:0;
+            width:100%;
+            display:flex;
+            justify-content:center;
+            padding:0 14px;
+            z-index:9999;
+        }
+
+        .dynamic-island{
+            width:100%;
+            max-width:1200px;
+            display:flex;
+            align-items:center;
+            justify-content:space-between;
+            gap:20px;
+            padding:12px 24px;
+            border-radius:34px;
+            background:rgba(18,18,26,.65);
+            backdrop-filter:blur(22px) saturate(180%);
+            border:1px solid rgba(255,255,255,.08);
+            box-shadow:0 8px 40px rgba(0,0,0,.35);
+        }
+
+        .island-left{
+            display:flex;
+            align-items:center;
+            gap:14px;
+            cursor:pointer;
+        }
+
+        .island-logo{
+            width:46px;
+            height:46px;
+            object-fit:contain;
+            filter:drop-shadow(0 0 14px rgba(168,85,247,.4));
+            transition:.6s;
+        }
+
+        .island-left:hover .island-logo{
+            transform:rotateY(360deg);
+        }
+
+        .island-text h3{
+            font-size:24px;
+            font-family:'Space Grotesk',sans-serif;
+            font-weight:800;
+            display:flex;
+            gap:1px;
+        }
+
+        .island-text h3 span{
+            background:linear-gradient(135deg,#ffffff,#d8b4fe);
+            -webkit-background-clip:text;
+            -webkit-text-fill-color:transparent;
+        }
+
+        .island-text p{
+            font-size:12px;
+            color:#9ca3af;
+        }
+
+        .island-nav{
+            display:flex;
+            gap:28px;
+        }
+
+        .island-nav a{
+            text-decoration:none;
+            color:#d4d4d8;
+            font-weight:600;
+            position:relative;
+            transition:.3s;
+        }
+
+        .island-nav a:hover{
+            color:white;
+        }
+
+        .island-buttons{
+            display:flex;
+            gap:12px;
+        }
+
+        .island-btn{
+            height:44px;
+            padding:0 20px;
+            border-radius:16px;
+            display:flex;
+            align-items:center;
+            justify-content:center;
+            font-size:13px;
+            font-weight:700;
+            cursor:pointer;
+            border:none;
+            color:white;
+            text-decoration:none;
+            transition:.3s;
+        }
+
+        .island-copy{
+            background:rgba(255,255,255,.05);
+            border:1px solid rgba(255,255,255,.08);
+        }
+
+        .island-copy:hover{
+            background:rgba(255,255,255,.1);
+            transform:translateY(-2px);
+        }
+
+        .btn-cosmic{
+            position:relative;
+            overflow:hidden;
+            background:#111118;
+        }
+
+        .btn-cosmic::before{
+            content:'';
+            position:absolute;
+            inset:-100%;
+            background:conic-gradient(from 0deg,transparent 20%,#7c3aed,#d946ef,transparent 80%);
+            animation:spin 4s linear infinite;
+        }
+
+        .btn-cosmic::after{
+            content:'';
+            position:absolute;
+            inset:2px;
+            background:#111118;
+            border-radius:14px;
+        }
+
+        .btn-cosmic span{
+            position:relative;
+            z-index:2;
+        }
+
+        @keyframes spin{
+            100%{
+                transform:rotate(360deg);
+            }
+        }
+
+        .hero{
+            min-height:100vh;
+            display:flex;
+            align-items:center;
+            justify-content:center;
+            padding:170px 20px 100px;
+            text-align:center;
+        }
+
+        .hero-content{
+            max-width:980px;
+        }
+
+        .hero-badge{
+            display:inline-flex;
+            padding:10px 18px;
+            border-radius:999px;
+            background:rgba(255,255,255,.05);
+            border:1px solid rgba(255,255,255,.08);
+            margin-bottom:28px;
+        }
+
+        .hero h1{
+            font-size:95px;
+            line-height:1;
+            font-family:'Space Grotesk',sans-serif;
+            margin-bottom:26px;
+            background:linear-gradient(135deg,#ffffff 20%,#d8b4fe 50%,#d946ef 100%);
+            -webkit-background-clip:text;
+            -webkit-text-fill-color:transparent;
+        }
+
+        .hero p{
+            font-size:22px;
+            line-height:1.8;
+            color:#d4d4d8;
+        }
+
+        .hero-buttons{
+            display:flex;
+            justify-content:center;
+            gap:14px;
+            margin-top:42px;
+            flex-wrap:wrap;
+        }
+
+        .btn{
+            height:56px;
+            padding:0 32px;
+            display:inline-flex;
+            align-items:center;
+            justify-content:center;
+            text-decoration:none;
+            font-size:15px;
+            font-weight:700;
+            border-radius:18px;
+            transition:.35s;
+        }
+
+        .btn-dark{
+            background:rgba(255,255,255,.05);
+            border:1px solid rgba(255,255,255,.08);
+            color:white;
+        }
+
+        .btn-dark:hover{
+            transform:translateY(-4px);
+            background:rgba(255,255,255,.1);
+        }
+
+        .hero-stats{
+            display:flex;
+            justify-content:center;
+            gap:18px;
+            margin-top:60px;
+            flex-wrap:wrap;
+        }
+
+        .stat-box{
+            min-width:180px;
+            background:rgba(255,255,255,.04);
+            border:1px solid rgba(255,255,255,.06);
+            border-radius:26px;
+            padding:24px;
+        }
+
+        .stat-box h3{
+            font-size:36px;
+            margin-bottom:6px;
+            font-family:'Space Grotesk',sans-serif;
+        }
+
+        .stat-box p{
+            font-size:14px;
+            color:#9ca3af;
+        }
+
+        section{
+            padding:90px 20px;
+        }
+
+        .container{
+            max-width:1200px;
+            margin:auto;
+        }
+
+        .section-title{
+            text-align:center;
+            margin-bottom:60px;
+        }
+
+        .section-title h2{
+            font-size:58px;
+            font-family:'Space Grotesk',sans-serif;
+            margin-bottom:16px;
+        }
+
+        .section-title p{
+            color:#9ca3af;
+        }
+
+        .modes-grid,
+        .features-grid{
+            display:grid;
+            grid-template-columns:repeat(auto-fit,minmax(260px,1fr));
+            gap:24px;
+        }
+
+        .mode-card,
+        .feature-card{
+            background:rgba(255,255,255,.04);
+            border:1px solid rgba(255,255,255,.06);
+            border-radius:30px;
+            padding:32px;
+            transition:.35s;
+        }
+
+        .mode-card:hover,
+        .feature-card:hover{
+            transform:translateY(-8px);
+            border-color:#a855f7;
+            box-shadow:0 0 35px rgba(168,85,247,.2);
+        }
+
+        .mode-icon,
+        .feature-icon{
+            width:72px;
+            height:72px;
+            border-radius:22px;
+            display:flex;
+            align-items:center;
+            justify-content:center;
+            font-size:34px;
+            margin-bottom:24px;
+            background:#7c3aed22;
+        }
+
+        .mode-card h3{
+            font-size:34px;
+            margin-bottom:14px;
+            font-family:'Space Grotesk',sans-serif;
+        }
+
+        .mode-card p,
+        .feature-card p{
+            line-height:1.9;
+            color:#d4d4d8;
+        }
+
+        .join-box{
+            background:linear-gradient(180deg,rgba(124,58,237,.14),rgba(255,255,255,.03));
+            border:1px solid rgba(255,255,255,.08);
+            border-radius:36px;
+            padding:64px 24px;
+            text-align:center;
+        }
+
+        .join-box h3{
+            font-size:54px;
+            margin-bottom:20px;
+            font-family:'Space Grotesk',sans-serif;
+        }
+
+        .ip{
+            font-size:46px;
+            font-weight:900;
+            color:#d8b4fe;
+            margin-bottom:20px;
+        }
+
+        .community-panel{
+            max-width:800px;
+            margin:auto;
+        }
+
+        .community-box{
+            background:rgba(255,255,255,.04);
+            border:1px solid rgba(255,255,255,.06);
+            border-radius:32px;
+            padding:48px;
+            text-align:center;
+        }
+
+        .community-box h3{
+            font-size:38px;
+            margin-bottom:16px;
+            font-family:'Space Grotesk',sans-serif;
+        }
+
+        .community-box p{
+            line-height:1.9;
+            color:#d4d4d8;
+            margin-bottom:28px;
+        }
+
+        footer{
+            padding:70px 20px;
+            border-top:1px solid rgba(255,255,255,.05);
+        }
+
+        .footer-content{
+            max-width:1200px;
+            margin:auto;
+            display:flex;
+            justify-content:space-between;
+            gap:40px;
+            flex-wrap:wrap;
+        }
+
+        .footer-brand h3{
+            font-size:38px;
+            margin-bottom:16px;
+            font-family:'Space Grotesk',sans-serif;
+        }
+
+        .footer-brand p{
+            line-height:1.8;
+            color:#9ca3af;
+        }
+
+        .copy-toast{
+            position:fixed;
+            bottom:30px;
+            left:50%;
+            transform:translateX(-50%);
+            background:rgba(17,17,24,.95);
+            border:1px solid rgba(168,85,247,.4);
+            padding:14px 24px;
+            border-radius:16px;
+            z-index:999999;
+            font-weight:700;
+            box-shadow:0 0 30px rgba(168,85,247,.35);
+        }
+
+        @media(max-width:980px){
+
+            .island-nav{
+                display:none;
+            }
+
+            .hero h1{
+                font-size:58px;
+            }
+
+            .hero p{
+                font-size:17px;
+            }
+
+            .section-title h2{
+                font-size:42px;
+            }
+        }
+
+        @media(max-width:600px){
+
+            .hero{
+                padding:150px 16px 80px;
+            }
+
+            .hero h1{
+                font-size:44px;
+            }
+
+            .hero p{
+                font-size:15px;
+            }
+
+            .join-box h3{
+                font-size:38px;
+            }
+
+            .ip{
+                font-size:30px;
+                word-break:break-word;
+            }
+
+            .mode-card,
+            .feature-card,
+            .community-box{
+                padding:24px;
+            }
+        }
+
+    </style>
+
+</head>
+
+<body>
+
+    <div class="bg-grid"></div>
+
+    <div class="bg-glow">
+        <div class="glow"></div>
+        <div class="glow"></div>
+        <div class="glow"></div>
+    </div>
+
+    <div class="cursor-glow"></div>
+
+    <header class="dynamic-header">
+
+        <div class="dynamic-island">
+
+            <div class="island-left" onclick="window.scrollTo({top:0,behavior:'smooth'})">
+
+                <img src="logo_furrmc.png" class="island-logo" alt="FurrMC Logo">
+
+                <div class="island-text">
+
+                    <h3>
+                        <span>F</span>
+                        <span>U</span>
+                        <span>R</span>
+                        <span>R</span>
+                        <span>M</span>
+                        <span>C</span>
+                    </h3>
+
+                    <p>Minecraft Network</p>
+
+                </div>
+
+            </div>
+
+            <nav class="island-nav">
+                <a href="#">Trang chủ</a>
+                <a href="#modes">Server</a>
+                <a href="#features">Tính năng</a>
+                <a href="#download">Tải Minecraft</a>
+                <a href="#community">Cộng đồng</a>
+            </nav>
+
+            <div class="island-buttons">
+
+                <button class="island-btn island-copy copy-btn" data-copy="FurrMC.com">
+                    Copy IP
+                </button>
+
+                <a href="#download" class="island-btn btn-cosmic">
+                    <span>Tải Game</span>
+                </a>
+
+            </div>
+
+        </div>
+
+    </header>
+
+    <section class="hero">
+
+        <div class="hero-content">
+
+            <div class="hero-badge">
+                ✨ Minecraft Server Việt Nam
+            </div>
+
+            <h1>FURRMC NETWORK</h1>
+
+            <p>
+                Trải nghiệm máy chủ Minecraft hiện đại với hệ thống SMP,
+                RPG, ECO và PvP tối ưu dành cho cả Java lẫn Bedrock.
+            </p>
+
+            <div class="hero-buttons">
+
+                <button class="btn btn-dark copy-btn" data-copy="FurrMC.com">
+                    Copy IP Server
+                </button>
+
+                <a href="#download" class="btn btn-dark">
+                    Tải Minecraft
+                </a>
+
+            </div>
+
+            <div class="hero-stats">
+
+                <div class="stat-box">
+                    <h3>24/7</h3>
+                    <p>Online ổn định</p>
+                </div>
+
+                <div class="stat-box">
+                    <h3>1.21+</h3>
+                    <p>Hỗ trợ phiên bản mới</p>
+                </div>
+
+                <div class="stat-box">
+                    <h3>Java + BE</h3>
+                    <p>Hỗ trợ mọi nền tảng</p>
+                </div>
+
+            </div>
+
+        </div>
+
+    </section>
+
+    <section id="modes">
+
+        <div class="container">
+
+            <div class="section-title">
+                <h2>Chế Độ Server</h2>
+                <p>Khám phá các chế độ hấp dẫn tại FurrMC</p>
+            </div>
+
+            <div class="modes-grid">
+
+                <div class="mode-card">
+                    <div class="mode-icon">🔥</div>
+                    <h3>SMP</h3>
+                    <p>Survival sinh tồn hiện đại với nhiều tính năng độc quyền.</p>
+                </div>
+
+                <div class="mode-card">
+                    <div class="mode-icon">🪄</div>
+                    <h3>RPG</h3>
+                    <p>Phiêu lưu fantasy với kỹ năng, quái vật và dungeon.</p>
+                </div>
+
+                <div class="mode-card">
+                    <div class="mode-icon">💰</div>
+                    <h3>ECO</h3>
+                    <p>Hệ thống kinh tế tự do, buôn bán và phát triển tài sản.</p>
+                </div>
+
+                <div class="mode-card">
+                    <div class="mode-icon">⚔️</div>
+                    <h3>PVP</h3>
+                    <p>Chiến đấu căng thẳng với nhiều arena và kit đa dạng.</p>
+                </div>
+
+            </div>
+
+        </div>
+
+    </section>
+
+    <section>
+
+        <div class="container">
+
+            <div class="join-box">
+
+                <h3>Tham Gia Ngay</h3>
+
+                <div class="ip">
+                    FurrMC.com
+                </div>
+
+                <button class="btn btn-dark copy-btn" data-copy="FurrMC.com">
+                    Copy Địa Chỉ Server
+                </button>
+
+            </div>
+
+        </div>
+
+    </section>
+
+    <section id="features">
+
+        <div class="container">
+
+            <div class="section-title">
+                <h2>Tính Năng</h2>
+                <p>Những hệ thống nổi bật của FurrMC</p>
+            </div>
+
+            <div class="features-grid">
+
+                <div class="feature-card">
+                    <div class="feature-icon">🚀</div>
+                    <h4>Tối Ưu Cao</h4>
+                    <p>Máy chủ ổn định, ping thấp và tối ưu trải nghiệm.</p>
+                </div>
+
+                <div class="feature-card">
+                    <div class="feature-icon">🛡️</div>
+                    <h4>Bảo Mật</h4>
+                    <p>Hệ thống chống hack và bảo vệ dữ liệu người chơi.</p>
+                </div>
+
+                <div class="feature-card">
+                    <div class="feature-icon">🎁</div>
+                    <h4>Sự Kiện</h4>
+                    <p>Nhiều event hấp dẫn cùng phần thưởng độc quyền.</p>
+                </div>
+
+                <div class="feature-card">
+                    <div class="feature-icon">🌎</div>
+                    <h4>Đa Nền Tảng</h4>
+                    <p>Chơi được trên Java và Bedrock mọi thiết bị.</p>
+                </div>
+
+            </div>
+
+        </div>
+
+    </section>
+
+    <section id="download">
+
+        <div class="container">
+
+            <div class="section-title">
+                <h2>Tải Minecraft</h2>
+                <p>Tải phiên bản phù hợp để tham gia server</p>
+            </div>
+
+            <div class="features-grid">
+
+                <div class="feature-card">
+
+                    <div class="feature-icon">📱</div>
+
+                    <h4>Minecraft Thường</h4>
+
+                    <p>
+                        Phiên bản Minecraft dành cho người chơi thông thường.
+                    </p>
+
+                    <a href="https://www.mediafire.com/file/tymbtge96v16yk9/minecraft-1.26.20.4_Furrmc.apk/file"
+                       target="_blank"
+                       class="btn btn-dark"
+                       style="width:100%;margin-top:18px;">
+
+                        Tải Minecraft
+
+                    </a>
+
+                </div>
+
+                <div class="feature-card">
+
+                    <div class="feature-icon">⚡</div>
+
+                    <h4>Minecraft Patch</h4>
+
+                    <p>
+                        Phiên bản patched hỗ trợ đầy đủ tính năng cho FurrMC.
+                    </p>
+
+                    <a href="https://www.mediafire.com/file/anjuvy8vvgr6031/MCPE-Patched_FurrMC.apk/file"
+                       target="_blank"
+                       class="btn btn-dark"
+                       style="width:100%;margin-top:18px;">
+
+                        Tải Bản Patch
+
+                    </a>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </section>
+
+    <section id="community">
+
+        <div class="container">
+
+            <div class="section-title">
+                <h2>Cộng Đồng</h2>
+                <p>Tham gia cộng đồng FurrMC ngay hôm nay</p>
+            </div>
+
+            <div class="community-panel">
+
+                <div class="community-box">
+
+                    <h3>FurrMC Community</h3>
+
+                    <p>
+                        Giao lưu cùng cộng đồng Minecraft Việt Nam,
+                        tham gia sự kiện và nhận nhiều phần quà hấp dẫn.
+                    </p>
+
+                    <button class="btn btn-dark copy-btn" data-copy="FurrMC.com">
+                        Copy Server IP
+                    </button>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </section>
+
+    <footer>
+
+        <div class="footer-content">
+
+            <div class="footer-brand">
+
+                <h3>FURRMC NETWORK</h3>
+
+                <p>
+                    Máy chủ Minecraft Việt Nam hiện đại,
+                    hỗ trợ Java và Bedrock.
+                </p>
+
+            </div>
+
+            <div class="footer-brand">
+
+                <h3>Bản Quyền</h3>
+
+                <p>
+                    © 2026 FurrMC Network<br>
+                    Website developed by EvB_Nghia
+                </p>
+
+            </div>
+
+        </div>
+
+    </footer>
+
+    <script>
+
+        const cursorGlow = document.querySelector('.cursor-glow');
+
+        document.addEventListener('mousemove',(e)=>{
+
+            cursorGlow.style.left = e.clientX + 'px';
+            cursorGlow.style.top = e.clientY + 'px';
+
+        });
+
+        async function copyText(text){
+
+            try{
+
+                await navigator.clipboard.writeText(text);
+
+                showToast("Đã sao chép: " + text);
+
+            }catch(err){
+
+                const textarea = document.createElement("textarea");
+
+                textarea.value = text;
+
+                document.body.appendChild(textarea);
+
+                textarea.select();
+
+                document.execCommand("copy");
+
+                document.body.removeChild(textarea);
+
+                showToast("Đã sao chép: " + text);
+            }
+        }
+
+        function showToast(message){
+
+            const oldToast = document.querySelector('.copy-toast');
+
+            if(oldToast){
+                oldToast.remove();
+            }
+
+            const toast = document.createElement('div');
+
+            toast.className = 'copy-toast';
+
+            toast.innerText = message;
+
+            document.body.appendChild(toast);
+
+            setTimeout(()=>{
+
+                toast.style.transition = '.4s';
+                toast.style.opacity = '0';
+
+                setTimeout(()=>{
+
+                    toast.remove();
+
+                },400);
+
+            },1800);
+        }
+
+        document.querySelectorAll('.copy-btn').forEach((button)=>{
+
+            button.addEventListener('click',()=>{
+
+                const text = button.getAttribute('data-copy');
+
+                copyText(text);
+
+            });
+
+        });
+
+    </script>
+
+</body>
+
+</html>
