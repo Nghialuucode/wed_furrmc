@@ -1,0 +1,852 @@
+<!DOCTYPE html>
+<html lang="vi">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FURRMC NETWORK</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet">
+
+    <style>
+        /* =========================================
+        RESET & BASE
+        ========================================= */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: linear-gradient(180deg, #040406 0%, #09090f 40%, #050507 100%);
+            color: white;
+            overflow-x: hidden;
+            position: relative;
+        }
+
+        /* =========================================
+        SCROLLBAR
+        ========================================= */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: #09090f;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: linear-gradient(180deg, #7c3aed, #d946ef);
+            border-radius: 999px;
+        }
+
+        /* =========================================
+        BACKGROUND EFFECTS
+        ========================================= */
+        .bg-grid {
+            position: fixed;
+            inset: 0;
+            background-image:
+                linear-gradient(rgba(255, 255, 255, .03) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(255, 255, 255, .03) 1px, transparent 1px);
+            background-size: 55px 55px;
+            mask-image: radial-gradient(circle at center, black 30%, transparent 95%);
+            z-index: -4;
+        }
+
+        .bg-glow {
+            position: fixed;
+            inset: 0;
+            overflow: hidden;
+            pointer-events: none;
+            z-index: -3;
+        }
+
+        .glow {
+            position: absolute;
+            border-radius: 50%;
+            filter: blur(120px);
+            opacity: .32;
+            animation: float 12s infinite ease-in-out;
+        }
+
+        .glow:nth-child(1) { width: 350px; height: 350px; background: #7c3aed; top: -100px; left: -100px; }
+        .glow:nth-child(2) { width: 300px; height: 300px; background: #d946ef; bottom: -100px; right: -100px; animation-delay: 3s; }
+        .glow:nth-child(3) { width: 240px; height: 240px; background: #9333ea; top: 40%; left: 35%; animation-delay: 6s; }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-25px); }
+        }
+
+        .cursor-glow {
+            position: fixed;
+            width: 260px;
+            height: 260px;
+            background: radial-gradient(circle, rgba(168, 85, 247, .18), transparent 70%);
+            border-radius: 50%;
+            transform: translate(-50%, -50%);
+            pointer-events: none;
+            z-index: -1;
+            transition: width 0.3s, height 0.3s;
+        }
+
+        /* =========================================
+        DYNAMIC ISLAND HEADER
+        ========================================= */
+        .dynamic-header {
+            position: fixed;
+            top: 18px;
+            left: 0;
+            width: 100%;
+            display: flex;
+            justify-content: center;
+            padding: 0 14px;
+            z-index: 9999;
+        }
+
+        .dynamic-island {
+            width: 100%;
+            max-width: 1200px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 20px;
+            padding: 12px 24px;
+            border-radius: 34px;
+            background: rgba(18, 18, 26, .65);
+            backdrop-filter: blur(22px) saturate(180%);
+            border: 1px solid rgba(255, 255, 255, .08);
+            box-shadow: 0 8px 40px rgba(0, 0, 0, .35), 0 0 40px rgba(168, 85, 247, .12);
+            transition: .35s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .dynamic-island:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 45px rgba(0, 0, 0, .4), 0 0 55px rgba(168, 85, 247, .18);
+            border-color: rgba(168, 85, 247, 0.3);
+        }
+
+        /* SPIN TYPOGRAPHY FOR LOGO */
+        .island-left {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            cursor: pointer;
+            perspective: 1000px;
+        }
+
+        .island-logo {
+            width: 46px;
+            height: 46px;
+            object-fit: contain;
+            filter: drop-shadow(0 0 14px rgba(168, 85, 247, .4));
+            transition: transform 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+
+        .island-left:hover .island-logo {
+            transform: rotateY(360deg) scale(1.05);
+        }
+
+        .island-text h3 {
+            font-size: 24px;
+            font-family: 'Space Grotesk', sans-serif;
+            font-weight: 800;
+            letter-spacing: 1px;
+            display: flex;
+        }
+
+        .island-text h3 span {
+            display: inline-block;
+            background: linear-gradient(135deg, #ffffff, #d8b4fe);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+
+        .island-left:hover .island-text h3 span {
+            transform: rotateX(360deg);
+        }
+        
+        .island-text h3 span:nth-child(1) { transition-delay: 0.0s; }
+        .island-text h3 span:nth-child(2) { transition-delay: 0.05s; }
+        .island-text h3 span:nth-child(3) { transition-delay: 0.1s; }
+        .island-text h3 span:nth-child(4) { transition-delay: 0.15s; }
+        .island-text h3 span:nth-child(5) { transition-delay: 0.2s; }
+        .island-text h3 span:nth-child(6) { transition-delay: 0.25s; }
+
+        .island-text p {
+            font-size: 12px;
+            color: #9ca3af;
+            margin-top: 1px;
+            letter-spacing: 0.5px;
+        }
+
+        /* NAVIGATION */
+        .island-nav {
+            display: flex;
+            align-items: center;
+            gap: 28px;
+        }
+
+        .island-nav a {
+            text-decoration: none;
+            color: #d4d4d8;
+            font-weight: 600;
+            font-size: 15px;
+            position: relative;
+            transition: .3s;
+        }
+
+        .island-nav a:hover { color: white; }
+        .island-nav a::after {
+            content: '';
+            position: absolute;
+            left: 0;
+            bottom: -6px;
+            width: 0%;
+            height: 2px;
+            background: linear-gradient(90deg, #7c3aed, #d946ef);
+            border-radius: 999px;
+            transition: .3s;
+        }
+        .island-nav a:hover::after { width: 100%; }
+
+        /* BUTTON GROUP */
+        .island-buttons {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .island-btn {
+            height: 44px;
+            padding: 0 20px;
+            border-radius: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 13.5px;
+            font-weight: 700;
+            cursor: pointer;
+            border: none;
+            transition: .3s cubic-bezier(0.4, 0, 0.2, 1);
+            text-decoration: none;
+            white-space: nowrap;
+            color: white;
+        }
+
+        .island-copy {
+            background: rgba(255, 255, 255, .05);
+            border: 1px solid rgba(255, 255, 255, .08);
+        }
+
+        .island-copy:hover {
+            transform: translateY(-2px);
+            background: rgba(255, 255, 255, .1);
+            box-shadow: 0 0 20px rgba(255, 255, 255, .1);
+        }
+
+        /* COSMIC BUTTON EFFECT */
+        .btn-cosmic {
+            position: relative;
+            background: #0d0d13;
+            color: white;
+            z-index: 1;
+            overflow: hidden;
+            border-radius: 18px;
+            border: none;
+            cursor: pointer;
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+
+        .btn-cosmic::before {
+            content: '';
+            position: absolute;
+            top: -50%; left: -50%;
+            width: 200%; height: 200%;
+            background: conic-gradient(from 0deg, transparent 20%, #7c3aed, #d946ef, transparent 80%);
+            animation: cosmicRotate 4s linear infinite;
+            z-index: -2;
+            opacity: 0.6;
+            transition: opacity 0.3s;
+        }
+
+        .btn-cosmic::after {
+            content: '';
+            position: absolute;
+            inset: 2px;
+            background: #111118;
+            border-radius: 16px;
+            z-index: -1;
+            transition: background 0.3s;
+        }
+
+        .btn-cosmic:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 0 35px rgba(168, 85, 247, 0.5);
+        }
+
+        .btn-cosmic:hover::before {
+            opacity: 1;
+            animation: cosmicRotate 1.5s linear infinite;
+        }
+
+        .btn-cosmic:hover::after {
+            background: linear-gradient(135deg, #181229 0%, #1c1026 100%);
+        }
+
+        @keyframes cosmicRotate {
+            100% { transform: rotate(360deg); }
+        }
+
+        /* =========================================
+        HERO SECTION
+        ========================================= */
+        .hero {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 170px 20px 100px;
+            text-align: center;
+            position: relative;
+        }
+
+        .hero-content {
+            max-width: 980px;
+            animation: fadeUp 1s ease-out;
+        }
+
+        .hero-badge {
+            display: inline-flex;
+            align-items: center;
+            padding: 10px 18px;
+            border-radius: 999px;
+            background: rgba(255, 255, 255, .05);
+            border: 1px solid rgba(255, 255, 255, .08);
+            backdrop-filter: blur(10px);
+            margin-bottom: 28px;
+            color: #d4d4d8;
+            font-size: 14px;
+            font-weight: 500;
+        }
+
+        .hero h1 {
+            font-size: 95px;
+            line-height: 1;
+            font-family: 'Space Grotesk', sans-serif;
+            margin-bottom: 26px;
+            background: linear-gradient(135deg, #ffffff 20%, #d8b4fe 50%, #d946ef 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            font-weight: 700;
+        }
+
+        .hero p {
+            font-size: 22px;
+            line-height: 1.9;
+            color: #d4d4d8;
+            max-width: 760px;
+            margin: auto;
+        }
+
+        .hero-buttons {
+            display: flex;
+            justify-content: center;
+            gap: 14px;
+            margin-top: 42px;
+            flex-wrap: wrap;
+        }
+
+        /* GLOBAL BUTTON STYLE */
+        .btn {
+            height: 56px;
+            padding: 0 32px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            text-decoration: none;
+            font-size: 15px;
+            font-weight: 700;
+            border-radius: 18px;
+            transition: .35s;
+        }
+
+        .btn-dark {
+            background: rgba(255, 255, 255, .05);
+            border: 1px solid rgba(255, 255, 255, .08);
+            backdrop-filter: blur(10px);
+            color: white;
+        }
+        .btn-dark:hover {
+            transform: translateY(-4px);
+            background: rgba(255, 255, 255, .1);
+            border-color: rgba(255, 255, 255, .2);
+        }
+
+        /* HERO STATS */
+        .hero-stats {
+            display: flex;
+            justify-content: center;
+            gap: 18px;
+            margin-top: 60px;
+            flex-wrap: wrap;
+        }
+
+        .stat-box {
+            min-width: 180px;
+            background: rgba(255, 255, 255, .04);
+            border: 1px solid rgba(255, 255, 255, .06);
+            border-radius: 26px;
+            padding: 24px;
+            backdrop-filter: blur(12px);
+            transition: .35s;
+        }
+
+        .stat-box:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 0 35px rgba(168, 85, 247, .2);
+            border-color: rgba(168, 85, 247, 0.3);
+        }
+
+        .stat-box h3 { font-size: 36px; margin-bottom: 6px; font-family: 'Space Grotesk', sans-serif; }
+        .stat-box p { font-size: 14px; color: #9ca3af; }
+
+        /* FOCUS HOVER CONTAINER */
+        .focus-hover-container {
+            transition: all 0.3s ease;
+        }
+
+        .focus-hover-container:hover .focus-target {
+            opacity: 0.35;
+            filter: blur(1px) scale(0.98);
+        }
+
+        .focus-hover-container .focus-target:hover {
+            opacity: 1 !important;
+            filter: blur(0) scale(1.04) !important;
+            box-shadow: 0 15px 50px rgba(124, 58, 237, 0.25);
+            border-color: #a855f7;
+        }
+
+        /* SECTIONS GENERAL */
+        section { padding: 90px 20px; }
+        .container { max-width: 1200px; margin: auto; }
+        .section-title { text-align: center; margin-bottom: 60px; }
+        .section-title h2 { font-size: 58px; font-family: 'Space Grotesk', sans-serif; margin-bottom: 16px; font-weight: 700; }
+        .section-title p { font-size: 18px; color: #9ca3af; }
+
+        /* MODES GRID */
+        .modes-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+            gap: 24px;
+        }
+
+        .mode-card {
+            background: linear-gradient(180deg, rgba(255, 255, 255, .06), rgba(255, 255, 255, .03));
+            border: 1px solid rgba(255, 255, 255, .06);
+            border-radius: 30px;
+            padding: 32px;
+            backdrop-filter: blur(14px);
+            transition: .4s cubic-bezier(0.25, 1, 0.5, 1);
+        }
+
+        .mode-icon {
+            width: 72px; height: 72px;
+            border-radius: 22px;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 34px; margin-bottom: 24px;
+        }
+        .smp .mode-icon { background: #ef444420; }
+        .rpg .mode-icon { background: #a855f720; }
+        .eco .mode-icon { background: #10b98120; }
+        .pvp .mode-icon { background: #f59e0b20; }
+
+        .mode-card h3 { font-size: 34px; font-family: 'Space Grotesk', sans-serif; margin-bottom: 14px; }
+        .mode-card p { font-size: 15px; line-height: 1.9; color: #d4d4d8; margin-bottom: 24px; }
+
+        /* JOIN BOX */
+        .join-box {
+            background: linear-gradient(180deg, rgba(124, 58, 237, .14), rgba(255, 255, 255, .03));
+            border: 1px solid rgba(255, 255, 255, .08);
+            border-radius: 36px;
+            padding: 64px 24px;
+            text-align: center;
+            backdrop-filter: blur(14px);
+        }
+        .join-box h3 { font-size: 54px; font-family: 'Space Grotesk', sans-serif; margin-bottom: 20px; }
+        .ip { font-size: 46px; font-weight: 900; color: #d8b4fe; margin-bottom: 20px; text-shadow: 0 0 35px rgba(168, 85, 247, .45); }
+
+        /* FEATURES GRID */
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+            gap: 22px;
+        }
+
+        .feature-card {
+            background: rgba(255, 255, 255, .04);
+            border: 1px solid rgba(255, 255, 255, .06);
+            border-radius: 28px;
+            padding: 28px;
+            backdrop-filter: blur(12px);
+            transition: .4s cubic-bezier(0.25, 1, 0.5, 1);
+        }
+
+        .feature-icon {
+            width: 60px; height: 60px;
+            border-radius: 20px;
+            display: flex; align-items: center; justify-content: center;
+            background: #7c3aed22; font-size: 26px; margin-bottom: 18px;
+        }
+        .feature-card h4 { font-size: 24px; margin-bottom: 12px; }
+        .feature-card p { line-height: 1.8; font-size: 15px; color: #d4d4d8; }
+
+        /* COMMUNITY PANELS */
+        .community-panel {
+            display: grid;
+            grid-template-columns: 1fr; /* Thay đổi thành 1 cột để căn giữa khi đã xóa ảnh */
+            gap: 24px;
+            align-items: stretch;
+            max-width: 800px; /* Đặt lại chiều rộng giới hạn cho hộp căn giữa đẹp hơn */
+            margin: auto;
+        }
+
+        .community-box {
+            background: rgba(255, 255, 255, .04);
+            border: 1px solid rgba(255, 255, 255, .06);
+            border-radius: 32px;
+            padding: 48px;
+            backdrop-filter: blur(12px);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            text-align: center; /* Căn giữa văn bản */
+        }
+        .community-box h3 { font-size: 38px; font-family: 'Space Grotesk', sans-serif; margin-bottom: 16px; }
+        .community-box p { line-height: 1.9; font-size: 16px; color: #d4d4d8; margin-bottom: 28px; }
+
+        /* FOOTER */
+        footer {
+            padding: 70px 20px;
+            border-top: 1px solid rgba(255, 255, 255, .05);
+        }
+        .footer-content {
+            max-width: 1200px; margin: auto;
+            display: flex; justify-content: space-between; gap: 40px; flex-wrap: wrap;
+        }
+        .footer-brand h3 { font-size: 38px; font-family: 'Space Grotesk', sans-serif; margin-bottom: 16px; }
+        .footer-brand p { line-height: 1.8; color: #9ca3af; }
+
+        /* REVEAL ANIMATIONS */
+        .reveal { opacity: 0; transform: translateY(40px); transition: all .8s cubic-bezier(0.25, 1, 0.5, 1); }
+        .reveal.active { opacity: 1; transform: translateY(0); }
+
+        @keyframes fadeUp {
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* RESPONSIVE MEDIA QUERIES */
+        @media(max-width: 980px) {
+            .island-nav { display: none; }
+            .hero h1 { font-size: 58px; }
+            .hero p { font-size: 17px; }
+            .section-title h2 { font-size: 42px; }
+        }
+
+        @media(max-width: 600px) {
+            .hero { padding: 150px 16px 80px; }
+            .hero h1 { font-size: 44px; }
+            .hero p { font-size: 15px; }
+            .island-logo { width: 42px; height: 42px; }
+            .island-text p { display: none; }
+            .island-btn { height: 40px; padding: 0 12px; font-size: 12px; }
+            .mode-card, .feature-card, .community-box { padding: 24px; }
+            .join-box { padding: 46px 20px; }
+            .join-box h3 { font-size: 38px; }
+            .ip { font-size: 30px; word-break: break-word; }
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="bg-grid"></div>
+    <div class="bg-glow">
+        <div class="glow"></div>
+        <div class="glow"></div>
+        <div class="glow"></div>
+    </div>
+    <div class="cursor-glow"></div>
+
+    <header class="dynamic-header">
+        <div class="dynamic-island">
+            <div class="island-left" onclick="window.scrollTo({top: 0, behavior: 'smooth'})">
+                <img src="logo_furrmc.png" class="island-logo" alt="FurrMC Logo">
+                <div class="island-text">
+                    <h3>
+                        <span>F</span><span>U</span><span>R</span><span>R</span><span>M</span><span>C</span>
+                    </h3>
+                    <p>Minecraft Network</p>
+                </div>
+            </div>
+
+            <nav class="island-nav">
+                <a href="#">Trang chủ</a>
+                <a href="#modes">Server</a>
+                <a href="#features">Tính năng</a>
+                <a href="#community">Cộng đồng</a>
+            </nav>
+
+            <div class="island-buttons">
+                <button class="island-btn island-copy" onclick="copyIP()">📋 Copy IP</button>
+                <a href="#join" class="island-btn btn-cosmic" style="width: 120px;">▶ Chơi Ngay</a>
+                </div>
+        </div>
+    </header>
+
+    <section class="hero">
+        <div class="hero-content">
+            <div class="hero-badge">Minecraft Việt Nam • Java & Bedrock</div>
+            <h1>FURRMC NETWORK</h1>
+            <p>Khám phá thế giới Minecraft theo cách của bạn với SMP, RPG, ECO và PVP hiện đại.</p>
+
+            <div class="hero-buttons">
+                <a href="#join" class="btn btn-cosmic" style="width: 200px; height: 56px;">CHƠI NGAY</a>
+                <a href="https://discord.gg/RfFxJ5NTN4" target="_blank" class="btn btn-dark">DISCORD</a>
+            </div>
+
+            <div class="hero-stats">
+                <div class="stat-box">
+                    <h3>24/7</h3>
+                    <p>Máy chủ ổn định</p>
+                </div>
+                <div class="stat-box">
+                    <h3>1.21+</h3>
+                    <p>Java & Bedrock</p>
+                </div>
+                <div class="stat-box">
+                    <h3>99%</h3>
+                    <p>Anti Exploit</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="modes">
+        <div class="container">
+            <div class="section-title reveal">
+                <h2>Thế Giới Server</h2>
+                <p>Khám phá các chế độ chơi độc đáo tại FurrMC</p>
+            </div>
+
+            <div class="modes-grid focus-hover-container">
+                <div class="mode-card smp reveal focus-target">
+                    <div class="mode-icon">🔥</div>
+                    <h3>SMP</h3>
+                    <p>Sinh tồn thực thụ, xây dựng đế chế và kinh tế tự do.</p>
+                    <a href="#" class="btn btn-dark">Khám phá</a>
+                </div>
+
+                <div class="mode-card rpg reveal focus-target">
+                    <div class="mode-icon">🧙</div>
+                    <h3>RPG</h3>
+                    <p>Phiêu lưu nhiệm vụ, class kỹ năng và boss huyền bí.</p>
+                    <a href="#" class="btn btn-dark">Khám phá</a>
+                </div>
+
+                <div class="mode-card eco reveal focus-target">
+                    <div class="mode-icon">🌿</div>
+                    <h3>ECO</h3>
+                    <p>Farm, trade, towny và hệ thống kinh tế thực tế.</p>
+                    <a href="#" class="btn btn-dark">Khám phá</a>
+                </div>
+
+                <div class="mode-card pvp reveal focus-target">
+                    <div class="mode-icon">⚔️</div>
+                    <h3>PVP</h3>
+                    <p>Combat đỉnh cao, ranked và chiến trường hấp dẫn.</p>
+                    <a href="#" class="btn btn-dark">Khám phá</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="join">
+        <div class="container">
+            <div class="join-box reveal">
+                <h3>Tham Gia Ngay</h3>
+                <div class="ip">furrmc.com</div>
+                <p>
+                    Bedrock Port: <b>19132</b><br>
+                    Java: <b>1.21.7+</b><br>
+                    Bedrock: <b>1.21.130</b>
+                </p>
+                <div class="hero-buttons">
+                    <button class="btn btn-cosmic" style="width: 190px; height: 56px;" onclick="copyIP()">Copy Java IP</button>
+                    <button class="btn btn-dark" onclick="copyBedrock()">Copy Bedrock</button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="features">
+        <div class="container">
+            <div class="section-title reveal">
+                <h2>Tại Sao Chọn FurrMC?</h2>
+                <p>Server Minecraft Việt Nam thế hệ mới</p>
+            </div>
+
+            <div class="features-grid focus-hover-container">
+                <div class="feature-card reveal focus-target">
+                    <div class="feature-icon">🖥️</div>
+                    <h4>24/7 Online</h4>
+                    <p>Máy chủ uptime cao và hoạt động ổn định liên tục.</p>
+                </div>
+
+                <div class="feature-card reveal focus-target">
+                    <div class="feature-icon">🛡️</div>
+                    <h4>Anti Cheat</h4>
+                    <p>Hệ thống chống cheat và exploit mạnh mẽ.</p>
+                </div>
+
+                <div class="feature-card reveal focus-target">
+                    <div class="feature-icon">👥</div>
+                    <h4>Cộng Đồng</h4>
+                    <p>Cộng đồng thân thiện và hỗ trợ nhanh chóng.</p>
+                </div>
+
+                <div class="feature-card reveal focus-target">
+                    <div class="feature-icon">🏆</div>
+                    <h4>Event</h4>
+                    <p>Sự kiện liên tục cùng phần thưởng hấp dẫn.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="community">
+        <div class="container">
+            <div class="section-title reveal">
+                <h2>Cộng Đồng FurrMC</h2>
+                <p>Tham gia Discord để nhận hỗ trợ nhanh nhất</p>
+            </div>
+
+            <div class="community-panel">
+                <div class="community-box reveal">
+                    <h3>Discord Community</h3>
+                    <p>Kết nối cộng đồng FurrMC, cập nhật máy chủ và tham gia event mới nhất.</p>
+                    <div class="hero-buttons">
+                        <a href="https://discord.gg/RfFxJ5NTN4" target="_blank" class="btn btn-cosmic" style="width: 220px; height: 56px;">THAM GIA DISCORD</a>
+                        <a href="#join" class="btn btn-dark">CHƠI NGAY</a>
+                    </div>
+                </div>
+                </div>
+        </div>
+    </section>
+
+    <footer>
+        <div class="footer-content">
+            <div class="footer-brand">
+                <h3>FURRMC NETWORK</h3>
+                <p>Server Minecraft Việt Nam<br>Chơi là vui - Fair Play</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        /* MOUSE CURSOR GLOW STYLING */
+        const glow = document.querySelector('.cursor-glow');
+        window.addEventListener('mousemove', (e) => {
+            glow.style.left = e.clientX + 'px';
+            glow.style.top = e.clientY + 'px';
+        });
+
+        document.querySelectorAll('a, button, .mode-card, .feature-card, .island-left').forEach(element => {
+            element.addEventListener('mouseenter', () => {
+                glow.style.width = '380px';
+                glow.style.height = '380px';
+            });
+            element.addEventListener('mouseleave', () => {
+                glow.style.width = '260px';
+                glow.style.height = '260px';
+            });
+        });
+
+        /* ACTION COPIES */
+        function copyIP() {
+            navigator.clipboard.writeText('furrmc.com');
+            showToast('📋 Đã copy thành công Java IP: furrmc.com');
+        }
+
+        function copyBedrock() {
+            navigator.clipboard.writeText('furrmc.com:19132');
+            showToast('📋 Đã copy thành công Bedrock IP: furrmc.com:19132');
+        }
+
+        /* CUSTOM TOAST SYSTEM */
+        function showToast(text) {
+            const oldToast = document.querySelector('.custom-toast');
+            if(oldToast) oldToast.remove();
+
+            const toast = document.createElement('div');
+            toast.className = 'custom-toast';
+            toast.innerHTML = text;
+            
+            toast.style.position = 'fixed';
+            toast.style.bottom = '30px';
+            toast.style.left = '50%';
+            toast.style.transform = 'translateX(-50%) translateY(20px)';
+            toast.style.padding = '14px 28px';
+            toast.style.borderRadius = '20px';
+            toast.style.background = 'rgba(15, 15, 25, 0.9)';
+            toast.style.color = 'white';
+            toast.style.fontWeight = '700';
+            toast.style.fontSize = '14px';
+            toast.style.zIndex = '99999';
+            toast.style.border = '1px solid #a855f7';
+            toast.style.boxShadow = '0 10px 40px rgba(168, 85, 247, 0.3)';
+            toast.style.opacity = '0';
+            toast.style.transition = 'all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275)';
+
+            document.body.appendChild(toast);
+
+            setTimeout(() => {
+                toast.style.opacity = '1';
+                toast.style.transform = 'translateX(-50%) translateY(0)';
+            }, 50);
+
+            setTimeout(() => {
+                toast.style.opacity = '0';
+                toast.style.transform = 'translateX(-50%) translateY(20px)';
+                setTimeout(() => toast.remove(), 400);
+            }, 2500);
+        }
+
+        /* SCROLL REVEAL ENGINE */
+        const reveals = document.querySelectorAll('.reveal');
+        function revealElements() {
+            reveals.forEach(el => {
+                const top = el.getBoundingClientRect().top;
+                const windowHeight = window.innerHeight;
+                if (top < windowHeight - 80) {
+                    el.classList.add('active');
+                }
+            });
+        }
+        window.addEventListener('scroll', revealElements);
+        revealElements();
+    </script>
+</body>
+</html>
