@@ -1,0 +1,1317 @@
+<!DOCTYPE html>
+<html lang="vi">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0">
+    <title>FURRMC NETWORK | Mystic Minecraft Server</title>
+
+    <link rel="icon" type="image/png" href="logo_furrmc.png">
+    <link rel="shortcut icon" type="image/x-icon" href="favicon.png">
+    <link rel="apple-touch-icon" href="logo_furrmc.png">
+
+
+    <style>
+        :root {
+            --primary: #c084fc;
+            --primary-glow: rgba(168, 85, 247, 0.4);
+            --secondary: #6366f1;
+            --bg-dark: #040209;
+            --card-bg: rgba(12, 8, 22, 0.65);
+            --border-white: rgba(255, 255, 255, 0.08);
+            --border-glow: rgba(168, 85, 247, 0.2);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: #030106;
+            color: #f8fafc;
+            overflow-x: hidden;
+            position: relative;
+        }
+
+        /* CUSTOM SCROLLBAR CAO CẤP */
+        ::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: #040209;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: linear-gradient(180deg, var(--primary), var(--secondary));
+            border-radius: 3px;
+        }
+
+        /* LƯỚI NỀN AMBIENT LIGHTING */
+        .bg-grid {
+            position: fixed;
+            inset: 0;
+            background-image:
+                linear-gradient(rgba(168, 85, 247, 0.015) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(168, 85, 247, 0.015) 1px, transparent 1px);
+            background-size: 60px 60px;
+            mask-image: radial-gradient(circle at 50% 30%, black 40%, transparent 85%);
+            z-index: -4;
+        }
+
+        /* HỆ THỐNG TINH THỂ PHÉP THUẬT */
+        .magic-container {
+            position: fixed;
+            inset: 0;
+            z-index: -3;
+            pointer-events: none;
+            overflow: hidden;
+        }
+
+        .shard {
+            position: absolute;
+            background: linear-gradient(135deg, rgba(192, 132, 252, 0.25), rgba(99, 102, 241, 0.15));
+            clip-path: polygon(50% 0%, 100% 35%, 85% 100%, 15% 100%, 0% 35%);
+            filter: blur(0.5px);
+            animation: magicFall linear infinite;
+            will-change: transform, opacity;
+        }
+
+        @keyframes magicFall {
+            0% {
+                transform: translateY(-5vh) translateX(0) rotate(0deg) scale(0.6);
+                opacity: 0;
+            }
+            15% { opacity: 0.7; }
+            90% { opacity: 0.4; }
+            100% {
+                transform: translateY(105vh) translateX(40px) rotate(360deg) scale(1);
+                opacity: 0;
+            }
+        }
+
+        .bg-glow {
+            position: fixed;
+            inset: 0;
+            overflow: hidden;
+            pointer-events: none;
+            z-index: -2;
+        }
+
+        .glow {
+            position: absolute;
+            border-radius: 50%;
+            filter: blur(140px);
+            opacity: 0.15;
+            animation: float 12s infinite ease-in-out;
+            will-change: transform;
+        }
+
+        .glow:nth-child(1) {
+            width: 500px;
+            height: 500px;
+            background: #4c1d95;
+            top: -100px;
+            left: -50px;
+        }
+
+        .glow:nth-child(2) {
+            width: 450px;
+            height: 450px;
+            background: #1e1b4b;
+            bottom: -50px;
+            right: -50px;
+            animation-delay: 3s;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0px) scale(1); }
+            50% { transform: translateY(-25px) scale(1.05); }
+        }
+
+        .cursor-glow {
+            position: fixed;
+            width: 350px;
+            height: 350px;
+            background: radial-gradient(circle, rgba(168, 85, 247, 0.06), transparent 65%);
+            border-radius: 50%;
+            transform: translate(-50%, -50%);
+            pointer-events: none;
+            z-index: -1;
+            will-change: left, top;
+        }
+
+        /* --- MODERN DYNAMIC ISLAND HEADER --- */
+        .dynamic-header {
+            position: fixed;
+            top: 20px;
+            left: 0;
+            width: 100%;
+            display: flex;
+            justify-content: center;
+            padding: 0 20px;
+            z-index: 9999;
+        }
+
+        .dynamic-island {
+            width: 100%;
+            max-width: 1200px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 20px;
+            padding: 10px 24px;
+            border-radius: 24px;
+            background: rgba(10, 6, 18, 0.7);
+            backdrop-filter: blur(24px) saturate(160%);
+            -webkit-backdrop-filter: blur(24px) saturate(160%);
+            border: 1px solid var(--border-white);
+            box-shadow: 0 16px 40px rgba(0, 0, 0, 0.6);
+        }
+
+        .island-left {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            cursor: pointer;
+        }
+
+        .island-logo {
+            width: 42px;
+            height: 42px;
+            object-fit: contain;
+            filter: drop-shadow(0 0 8px rgba(168, 85, 247, 0.35));
+            transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .island-left:hover .island-logo {
+            transform: scale(1.08) rotate(4deg);
+        }
+
+        .island-text h3 {
+            font-size: 22px;
+            font-family: 'Space Grotesk', sans-serif;
+            font-weight: 800;
+            letter-spacing: 0.5px;
+            background: linear-gradient(135deg, #ffffff, #e9d5ff);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .island-text p {
+            font-size: 11px;
+            color: #94a3b8;
+            font-weight: 500;
+        }
+
+        .island-nav {
+            display: flex;
+            gap: 28px;
+        }
+
+        .island-nav a {
+            text-decoration: none;
+            color: #94a3b8;
+            font-weight: 500;
+            font-size: 14px;
+            position: relative;
+            transition: color 0.3s;
+        }
+
+        .island-nav a:hover, .island-nav a.active {
+            color: var(--primary);
+        }
+
+        .island-nav a::after {
+            content: '';
+            position: absolute;
+            bottom: -6px;
+            left: 50%;
+            transform: translateX(-50%) scaleX(0);
+            width: 14px;
+            height: 2px;
+            background: var(--primary);
+            border-radius: 2px;
+            transition: transform 0.3s ease;
+        }
+
+        .island-nav a:hover::after {
+            transform: translateX(-50%) scaleX(1);
+        }
+
+        .island-buttons {
+            display: flex;
+            gap: 8px;
+            align-items: center;
+        }
+
+        .island-btn {
+            height: 38px;
+            padding: 0 14px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 13px;
+            font-weight: 600;
+            cursor: pointer;
+            border: none;
+            color: white;
+            text-decoration: none;
+            transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .island-btn:active {
+            transform: scale(0.95) translateY(2px);
+        }
+
+        .island-copy {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid var(--border-white);
+        }
+
+        .island-copy:hover {
+            background: rgba(168, 85, 247, 0.1);
+            border-color: rgba(168, 85, 247, 0.4);
+        }
+
+        .btn-cosmic {
+            position: relative;
+            background: #5865F2;
+            border: 1px solid rgba(88, 101, 242, 0.4);
+            box-shadow: 0 4px 12px rgba(88, 101, 242, 0.2);
+        }
+
+        .btn-cosmic:hover {
+            background: #4752c4;
+            box-shadow: 0 0 15px rgba(88, 101, 242, 0.4);
+        }
+
+        .btn-fb-island {
+            background: rgba(24, 119, 242, 0.15);
+            border: 1px solid rgba(24, 119, 242, 0.4);
+            color: #1877F2;
+        }
+
+        .btn-fb-island:hover {
+            background: #1877F2;
+            color: white;
+            box-shadow: 0 0 15px rgba(24, 119, 242, 0.4);
+        }
+
+        /* --- HERO SECTION --- */
+        .hero {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 160px 20px 80px;
+            text-align: center;
+        }
+
+        .hero-content {
+            max-width: 900px;
+        }
+
+        .hero-badge {
+            display: inline-flex;
+            padding: 8px 16px;
+            border-radius: 20px;
+            background: rgba(168, 85, 247, 0.06);
+            border: 1px solid rgba(168, 85, 247, 0.2);
+            margin-bottom: 24px;
+            color: #d8b4fe;
+            font-size: 13px;
+            font-weight: 600;
+            letter-spacing: 0.5px;
+        }
+
+        .hero h1 {
+            font-size: 84px;
+            line-height: 1.1;
+            font-family: 'Space Grotesk', sans-serif;
+            font-weight: 800;
+            margin-bottom: 24px;
+            background: linear-gradient(135deg, #ffffff 30%, #e9d5ff 70%, #a5b4fc 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            letter-spacing: -1px;
+        }
+
+        .hero p {
+            font-size: 19px;
+            line-height: 1.7;
+            color: #94a3b8;
+            font-weight: 400;
+            max-width: 720px;
+            margin: 0 auto 40px;
+        }
+
+        .hero-buttons {
+            display: flex;
+            justify-content: center;
+            gap: 16px;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            height: 52px;
+            padding: 0 30px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            text-decoration: none;
+            font-size: 14px;
+            font-weight: 600;
+            border-radius: 14px;
+            transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+            cursor: pointer;
+        }
+
+        .btn:active {
+            transform: scale(0.96) translateY(3px);
+        }
+
+        .btn-dark {
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid var(--border-white);
+            color: white;
+        }
+
+        .btn-dark:hover {
+            background: rgba(168, 85, 247, 0.08);
+            border-color: var(--border-glow);
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
+        }
+
+        .btn-discord {
+            background: #5865F2;
+            color: white;
+        }
+
+        .btn-discord:hover {
+            background: #4752c4;
+            box-shadow: 0 10px 25px rgba(88, 101, 242, 0.3);
+        }
+
+        .hero-stats {
+            display: flex;
+            justify-content: center;
+            gap: 32px;
+            margin-top: 70px;
+            flex-wrap: wrap;
+        }
+
+        .stat-box {
+            min-width: 220px;
+            background: var(--card-bg);
+            border: 1px solid var(--border-white);
+            border-radius: 20px;
+            padding: 24px;
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .stat-box:hover {
+            border-color: var(--border-glow);
+            background: rgba(168, 85, 247, 0.02);
+        }
+
+        .stat-box h3 {
+            font-size: 34px;
+            font-weight: 800;
+            margin-bottom: 6px;
+            font-family: 'Space Grotesk', sans-serif;
+            background: linear-gradient(135deg, #ffffff, #c084fc);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .stat-box p {
+            font-size: 12px;
+            font-weight: 600;
+            color: #64748b;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        section {
+            padding: 100px 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: auto;
+        }
+
+        .section-title {
+            text-align: center;
+            margin-bottom: 60px;
+        }
+
+        .section-title h2 {
+            font-size: 48px;
+            font-family: 'Space Grotesk', sans-serif;
+            font-weight: 800;
+            margin-bottom: 14px;
+            background: linear-gradient(to right, #fff, #c084fc);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            letter-spacing: -0.5px;
+        }
+
+        .section-title p {
+            color: #64748b;
+            font-size: 16px;
+        }
+
+        .modes-grid, .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+            gap: 24px;
+        }
+
+        /* --- GLASS-PREMIUM CARDS PANEL WITH CLEAR 3D CLICK EFFECT --- */
+        .mode-card, .feature-card, .community-card-custom {
+            position: relative;
+            background: var(--card-bg);
+            border-radius: 24px;
+            padding: 36px;
+            border: 1px solid var(--border-white);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            transition: transform 0.2s cubic-bezier(0.25, 1, 0.5, 1), border-color 0.3s, background-color 0.3s, box-shadow 0.2s;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            cursor: pointer;
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3), inset 0 1px 1px rgba(255, 255, 255, 0.1);
+        }
+
+        .mode-card:hover, .feature-card:hover, .community-card-custom:hover {
+            border-color: var(--border-glow);
+            background: rgba(18, 12, 32, 0.75);
+            transform: translateY(-4px);
+            box-shadow: 0 20px 35px rgba(0, 0, 0, 0.4), 0 0 20px rgba(168, 85, 247, 0.1);
+        }
+
+        /* TẠO HIỆU ỨNG NHẤN NỔI 3D RÕ RÀNG */
+        .mode-card:not(.disabled-status):active, 
+        .feature-card:active, 
+        .community-card-custom:active {
+            transform: scale(0.96) translateY(4px);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.5), inset 0 0 10px rgba(0, 0, 0, 0.6);
+            transition: transform 0.08s ease, box-shadow 0.08s ease;
+        }
+
+        .mode-card:hover .mode-icon,
+        .feature-card:hover .feature-icon,
+        .community-card-custom:hover .com-icon {
+            transform: translateY(-2px) scale(1.05);
+            background: rgba(168, 85, 247, 0.12);
+            border-color: rgba(168, 85, 247, 0.4);
+            box-shadow: 0 8px 16px rgba(168, 85, 247, 0.1);
+        }
+
+        .mode-card.disabled-status {
+            cursor: not-allowed;
+            opacity: 0.55;
+        }
+        
+        .mode-card.disabled-status:hover {
+            border-color: var(--border-white);
+            background: var(--card-bg);
+            transform: none;
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3);
+        }
+
+        .mode-card.disabled-status:hover .mode-icon {
+            transform: none;
+            background: rgba(255, 255, 255, 0.02);
+            border-color: var(--border-white);
+            box-shadow: none;
+        }
+
+        /* ICON MA THUẬT NÉT THANH */
+        .mode-icon, .feature-icon, .com-icon {
+            width: 56px;
+            height: 56px;
+            border-radius: 14px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 26px;
+            margin-bottom: 28px;
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid var(--border-white);
+            transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .com-icon {
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        /* STATUS BADGE MINIMALIST */
+        .market-badge {
+            position: absolute;
+            top: 32px;
+            right: 32px;
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 10px;
+            font-weight: 700;
+            color: #4ade80;
+            background: rgba(74, 222, 128, 0.08);
+            padding: 4px 10px;
+            border-radius: 8px;
+            border: 1px solid rgba(74, 222, 128, 0.15);
+            letter-spacing: 0.5px;
+        }
+        .market-badge.maintenance {
+            color: #f87171;
+            background: rgba(248, 113, 113, 0.08);
+            border-color: rgba(248, 113, 113, 0.15);
+        }
+        .market-badge.coming-soon {
+            color: #c084fc;
+            background: rgba(192, 132, 252, 0.08);
+            border-color: rgba(192, 132, 252, 0.15);
+        }
+
+        .mode-card h3 {
+            font-size: 26px;
+            margin-bottom: 12px;
+            font-family: 'Space Grotesk', sans-serif;
+            font-weight: 700;
+            color: #ffffff;
+        }
+
+        .mode-card p, .feature-card p {
+            line-height: 1.6;
+            color: #94a3b8;
+            font-size: 14.5px;
+        }
+
+        .feature-card h4 {
+            font-size: 20px;
+            font-family: 'Space Grotesk', sans-serif;
+            margin-bottom: 12px;
+            color: #ffffff;
+        }
+
+        /* --- JOIN BOX LUXURY BRUSH --- */
+        .join-box {
+            background: radial-gradient(circle at 50% 0%, rgba(168, 85, 247, 0.08), rgba(10, 6, 18, 0.4));
+            border: 1px solid rgba(168, 85, 247, 0.25);
+            border-radius: 28px;
+            padding: 60px 24px;
+            text-align: center;
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+        }
+
+        .join-box h3 {
+            font-size: 44px;
+            margin-bottom: 16px;
+            font-family: 'Space Grotesk', sans-serif;
+            font-weight: 800;
+            background: linear-gradient(to right, #fff, #e9d5ff);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .ip-container {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 32px;
+        }
+
+        .ip {
+            font-size: 40px;
+            font-weight: 800;
+            color: #ffffff;
+            font-family: 'Space Grotesk', sans-serif;
+            letter-spacing: -0.5px;
+        }
+
+        .port-group-flex {
+            display: flex;
+            gap: 12px;
+            justify-content: center;
+        }
+
+        .port-pe {
+            font-size: 16px;
+            font-weight: 600;
+            color: #c084fc;
+            background: rgba(168, 85, 247, 0.08);
+            padding: 6px 18px;
+            border-radius: 10px;
+            border: 1px solid rgba(168, 85, 247, 0.2);
+        }
+
+        .version-container {
+            display: flex;
+            gap: 12px;
+            justify-content: center;
+            align-items: center;
+            margin-top: 8px;
+            flex-wrap: wrap;
+        }
+
+        .version-badge {
+            font-size: 13px;
+            font-weight: 500;
+            color: #94a3b8;
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid var(--border-white);
+            padding: 6px 14px;
+            border-radius: 10px;
+        }
+
+        .version-badge span {
+            color: var(--primary);
+            font-weight: 600;
+        }
+
+        /* --- COMMUNITY SECTION --- */
+        .community-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 24px;
+        }
+
+        .community-card-custom {
+            text-align: center;
+            align-items: center;
+            justify-content: space-between;
+            min-height: 320px;
+        }
+
+        .community-card-custom h3 {
+            font-size: 24px;
+            font-family: 'Space Grotesk', sans-serif;
+            font-weight: 700;
+            margin-bottom: 10px;
+            color: #ffffff;
+        }
+
+        .community-card-custom p {
+            font-size: 14px;
+            color: #64748b;
+            margin-bottom: 24px;
+        }
+
+        .btn-link {
+            width: 100%;
+            height: 46px;
+            border-radius: 12px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 13.5px;
+            transition: all 0.3s ease;
+        }
+
+        .btn-link-discord { background: #5865F2; color: white; }
+        .btn-link-discord:hover { background: #4752c4; box-shadow: 0 8px 20px rgba(88, 101, 242, 0.25); }
+
+        .btn-link-facebook { background: rgba(24, 119, 242, 0.1); color: #1877F2; border: 1px solid rgba(24, 119, 242, 0.2); }
+        .btn-link-facebook:hover { background: rgba(24, 119, 242, 0.15); border-color: #1877F2; }
+
+        .badge-online {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            background: rgba(74, 222, 128, 0.06);
+            color: #4ade80;
+            padding: 6px 14px;
+            border-radius: 8px;
+            font-weight: 700;
+            font-size: 11px;
+            border: 1px solid rgba(74, 222, 128, 0.15);
+            letter-spacing: 0.5px;
+            animation: pulseGlow 2.5s infinite ease-in-out;
+        }
+
+        @keyframes pulseGlow {
+            0%, 100% { opacity: 0.8; transform: scale(1); }
+            50% { opacity: 1; transform: scale(1.02); }
+        }
+
+        .copy-group-flex {
+            display: flex;
+            gap: 8px;
+            justify-content: center;
+            width: 100%;
+        }
+
+        .btn-sub-copy {
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid var(--border-white);
+            color: #cbd5e1;
+            font-size: 12px;
+            font-weight: 600;
+            padding: 8px 14px;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .btn-sub-copy:hover {
+            background: rgba(168, 85, 247, 0.08);
+            border-color: rgba(168, 85, 247, 0.3);
+            color: white;
+        }
+
+        /* --- FOOTER MINIMALIST --- */
+        footer {
+            padding: 60px 20px;
+            border-top: 1px solid var(--border-white);
+            background: #05030a;
+        }
+
+        .footer-content {
+            max-width: 1200px;
+            margin: auto;
+            display: flex;
+            justify-content: space-between;
+            gap: 40px;
+            flex-wrap: wrap;
+        }
+
+        .footer-brand h3 {
+            font-size: 28px;
+            margin-bottom: 12px;
+            font-family: 'Space Grotesk', sans-serif;
+            font-weight: 800;
+            background: linear-gradient(135deg, #fff, var(--primary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .footer-brand p {
+            line-height: 1.6;
+            color: #64748b;
+            font-size: 13.5px;
+        }
+
+        /* TOAST SAO CHÉP CAO CẤP */
+        .copy-toast {
+            position: fixed;
+            bottom: 30px;
+            left: 50%;
+            transform: translateX(-50%) translateY(20px);
+            background: rgba(15, 10, 28, 0.85);
+            border: 1px solid rgba(168, 85, 247, 0.3);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            padding: 12px 24px;
+            border-radius: 14px;
+            z-index: 999999;
+            font-size: 13.5px;
+            font-weight: 600;
+            color: white;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+            opacity: 0;
+            transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .copy-toast.show {
+            transform: translateX(-50%) translateY(0);
+            opacity: 1;
+        }
+
+        /* MUSIC CONTROL INTERFACE */
+        .music-control-btn {
+            position: fixed;
+            bottom: 24px;
+            right: 24px;
+            z-index: 10000;
+            background: rgba(10, 6, 18, 0.6);
+            border: 1px solid var(--border-white);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            width: 44px;
+            height: 44px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
+            transition: all 0.3s ease;
+            font-size: 16px;
+            user-select: none;
+        }
+
+        .music-control-btn:hover {
+            border-color: rgba(168, 85, 247, 0.4);
+            background: rgba(168, 85, 247, 0.05);
+        }
+
+        /* --- RESPONSIVE OPTIMIZATION --- */
+        @media(max-width:1080px) {
+            .island-nav { display: none; }
+            .hero h1 { font-size: 64px; }
+        }
+
+        @media(max-width:768px) {
+            .island-buttons .island-copy { display: none; } /* Ẩn bớt nút phụ trên Tablet/Mobile */
+        }
+
+        @media(max-width:600px) {
+            .dynamic-island { padding: 8px 16px; border-radius: 18px; }
+            .island-buttons { gap: 4px; }
+            .island-btn { height: 34px; padding: 0 10px; font-size: 12px; border-radius: 8px; }
+            .hero { padding: 130px 16px 60px; }
+            .hero h1 { font-size: 38px; }
+            .hero p { font-size: 14.5px; margin-bottom: 32px; }
+            .stat-box { min-width: 100%; padding: 18px; }
+            .stat-box h3 { font-size: 28px; }
+            .section-title h2 { font-size: 32px; }
+            .join-box h3 { font-size: 32px; }
+            .ip { font-size: 28px; }
+            .mode-card, .feature-card, .community-card-custom { padding: 28px 24px; border-radius: 20px; }
+            .copy-group-flex { flex-direction: column; gap: 8px; }
+            .music-control-btn { bottom: 16px; right: 16px; width: 40px; height: 40px; }
+        }
+    </style>
+</head>
+
+<body>
+    <audio id="bg-audio" loop>
+        <source src="music.mp3" type="audio/mpeg">
+    </audio>
+
+    <div id="music-toggle" class="music-control-btn" title="Bật/Tắt nhạc nền">🔇</div>
+
+    <div class="bg-grid"></div>
+    <div class="magic-container" id="magic-particles"></div>
+    
+    <div class="bg-glow">
+        <div class="glow"></div>
+        <div class="glow"></div>
+    </div>
+
+    <div class="cursor-glow"></div>
+
+    <header class="dynamic-header">
+        <div class="dynamic-island">
+            <div class="island-left" onclick="window.scrollTo({top:0,behavior:'smooth'})">
+                <img src="logo_furrmc.png" class="island-logo" alt="FurrMC Logo">
+                <div class="island-text">
+                    <h3>FURRMC</h3>
+                    <p>Minecraft Network</p>
+                </div>
+            </div>
+
+            <nav class="island-nav">
+                <a href="#" class="active">Trang chủ</a>
+                <a href="#modes">Server</a>
+                <a href="#features">Tính năng</a>
+                <a href="#download">Tải Game</a>
+                <a href="#community">Cộng đồng</a>
+            </nav>
+
+            <div class="island-buttons">
+                <button class="island-btn island-copy copy-btn" data-copy="FurrMC.com">PC</button>
+                <button class="island-btn island-copy copy-btn" data-copy="FurrMC.com:19132">PE</button>
+                <a href="https://www.facebook.com/share/g/14WmBX5kuEQ/" target="_blank" class="island-btn btn-fb-island">
+                    <span>Fanpage</span>
+                </a>
+                <a href="https://discord.gg/RfFxJ5NTN4" target="_blank" class="island-btn btn-cosmic">
+                    <span>Discord</span>
+                </a>
+            </div>
+        </div>
+    </header>
+
+    <section class="hero">
+        <div class="hero-content">
+            <div class="hero-badge">🔮 MINECRAFT MYSTIC SERVER</div>
+            <h1>FURRMC NETWORK</h1>
+            <p>
+                Trải nghiệm máy chủ Minecraft thế hệ mới với hệ thống sinh tồn tân tiến, 
+                tối ưu hiệu năng vượt trội cho toàn bộ người chơi Java và Bedrock.
+            </p>
+
+            <div class="hero-buttons">
+                <button class="btn btn-dark copy-btn" data-copy="FurrMC.com">💻 Copy IP PC</button>
+                <button class="btn btn-dark copy-btn" data-copy="FurrMC.com:19132">📱 Copy IP PE</button>
+                <a href="https://discord.gg/RfFxJ5NTN4" target="_blank" class="btn btn-discord">Tham Gia Discord</a>
+            </div>
+
+            <div class="hero-stats">
+                <div class="stat-box">
+                    <h3>1.21.7+</h3>
+                    <p>Hỗ trợ phiên bản mới</p>
+                </div>
+                <div class="stat-box">
+                    <h3>Java + Bedrock</h3>
+                    <p>Hỗ trợ mọi nền tảng</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="modes">
+        <div class="container">
+            <div class="section-title">
+                <h2>Chế Độ Server</h2>
+                <p>Khám phá các thế giới huyền bí tại hệ thống máy chủ</p>
+            </div>
+            <div class="modes-grid">
+                <div class="mode-card">
+                    <div class="market-badge">ONLINE</div>
+                    <div class="mode-icon">🔥</div>
+                    <h3>SMP</h3>
+                    <p>Sinh tồn thế hệ mới tích hợp nhiều cơ chế mở rộng độc quyền và hấp dẫn.</p>
+                </div>
+
+                <div class="mode-card disabled-status">
+                    <div class="market-badge coming-soon">SẮP KHỞI CHẠY</div>
+                    <div class="mode-icon">🪄</div>
+                    <h3>RPG</h3>
+                    <p>Hệ thống Dungeon hầm ngục và trang bị ma thuật cổ đại đang được tinh luyện.</p>
+                </div>
+
+                <div class="mode-card disabled-status">
+                    <div class="market-badge maintenance">BẢO TRÌ</div>
+                    <div class="mode-icon">💰</div>
+                    <h3>ECO</h3>
+                    <p>Cơ chế giao thương kinh tế thị trường đang được nâng cấp lõi hệ thống.</p>
+                </div>
+
+                <div class="mode-card">
+                    <div class="market-badge">ONLINE</div>
+                    <div class="mode-icon">⚔️</div>
+                    <h3>PVP</h3>
+                    <p>Đấu trường rực lửa tối ưu hóa kết nối, thách thức mọi kỹ năng chiến đấu.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section>
+        <div class="container">
+            <div class="join-box">
+                <h3>Tham Gia Ngay</h3>
+                <div class="ip-container">
+                    <div class="ip">IP: FurrMC.com</div>
+                    <div class="port-group-flex">
+                        <div class="port-pe">Port PE: 19132</div>
+                    </div>
+                    <div class="version-container">
+                        <div class="version-badge">💻 Java: <span>1.21.7+</span></div>
+                        <div class="version-badge">📱 Bedrock: <span>1.21.130+</span></div>
+                    </div>
+                </div>
+                <div class="copy-group-flex" style="max-width: 480px; margin: 0 auto;">
+                    <button class="btn btn-dark copy-btn" data-copy="FurrMC.com" style="flex: 1; height: 48px;">💻 Copy IP PC</button>
+                    <button class="btn btn-dark copy-btn" data-copy="FurrMC.com:19132" style="flex: 1; height: 48px;">📱 Copy IP PE</button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="features">
+        <div class="container">
+            <div class="section-title">
+                <h2>Tính Năng Hệ Thống</h2>
+                <p>Những ưu điểm vượt trội kiến tạo nên chất lượng cao cấp</p>
+            </div>
+
+            <div class="features-grid">
+                <div class="feature-card">
+                    <div class="feature-icon">🚀</div>
+                    <h4>Hiệu Năng Tối Ưu</h4>
+                    <p>Sử dụng cơ sở hạ tầng chuyên dụng cao cấp giúp vận hành mượt mà.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">🛡️</div>
+                    <h4>Bảo Mật An Toàn</h4>
+                    <p>Hệ thống sao lưu dữ liệu tự động, bảo vệ tối đa thành quả của bạn.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">🎁</div>
+                    <h4>Sự Kiện Hàng Tuần</h4>
+                    <p>Chuỗi Event diễn ra định kỳ mang đến nhiều phần thưởng độc đáo.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">🌎</div>
+                    <h4>Đồng Bộ Toàn Diện</h4>
+                    <p>Liên thông hoàn hảo giữa PC, điện thoại và các thiết bị di động.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="download">
+        <div class="container">
+            <div class="section-title">
+                <h2>Tải Game Cài Đặt</h2>
+                <p>Lựa chọn phiên bản phù hợp để bắt đầu hành trình</p>
+            </div>
+
+            <div class="features-grid" style="max-width: 800px; margin: auto;">
+                <div class="feature-card">
+                    <div class="feature-icon">📱</div>
+                    <h4>Minecraft Gốc</h4>
+                    <p>Môi trường Minecraft tiêu chuẩn phục vụ nhu cầu trải nghiệm cơ bản.</p>
+                    <a href="https://www.mediafire.com/file/tymbtge96v16yk9/minecraft-1.26.20.4_Furrmc.apk/file" target="_blank" class="btn btn-dark" style="width:100%;margin-top:24px;">Tải Game APK</a>
+                </div>
+
+                <div class="feature-card">
+                    <div class="feature-icon">⚡</div>
+                    <h4>Minecraft Patch</h4>
+                    <p>Bản sửa đổi tối ưu hóa đồng bộ hiển thị cấu trúc ItemsAdder của FurrMC.</p>
+                    <a href="https://www.mediafire.com/file/anjuvy8vvgr6031/MCPE-Patched_FurrMC.apk/file" target="_blank" class="btn btn-dark" style="width:100%;margin-top:24px;">Tải Bản Patch</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="community">
+        <div class="container">
+            <div class="section-title">
+                <h2>Cộng Đồng Kết Nối</h2>
+                <p>Nơi thảo luận, nhận hỗ trợ kỹ thuật và gặp gỡ đồng đội</p>
+            </div>
+
+            <div class="community-grid">
+                <div class="community-card-custom">
+                    <div>
+                        <div class="com-icon">💬</div>
+                        <h3>Discord Server</h3>
+                        <p>Kênh thông tin trực tiếp, cập nhật các thay đổi mới nhất của cụm máy chủ.</p>
+                    </div>
+                    <a href="https://discord.gg/RfFxJ5NTN4" target="_blank" class="btn-link btn-link-discord">Tham Gia Kênh</a>
+                </div>
+
+                <div class="community-card-custom">
+                    <div>
+                        <div class="com-icon">👍</div>
+                        <h3>Group Facebook</h3>
+                        <p>Kênh giao lưu chia sẻ khoảnh khắc giải trí và tham gia các hoạt động cộng đồng.</p>
+                    </div>
+                    <a href="https://www.facebook.com/share/g/14WmBX5kuEQ/" target="_blank" class="btn-link btn-link-facebook">Ghé Thăm Nhóm</a>
+                </div>
+
+                <div class="community-card-custom">
+                    <div>
+                        <div class="com-icon">🛡️</div>
+                        <h3>Đội Ngũ Nhân Sự</h3>
+                        <p>Kỹ thuật viên chuyên nghiệp hỗ trợ xử lý thắc mắc và tranh chấp nhanh chóng.</p>
+                        <div class="copy-group-flex" style="margin-top: 4px;">
+                            <button class="btn-sub-copy copy-btn" data-copy="FurrMC.com">💻 Copy PC</button>
+                            <button class="btn-sub-copy copy-btn" data-copy="FurrMC.com:19132">📱 Copy PE</button>
+                        </div>
+                    </div>
+                    <div class="badge-online" style="margin-top:20px;">⚡ SYSTEM ACTIVE</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <footer>
+        <div class="footer-content">
+            <div class="footer-brand">
+                <h3>FURRMC NETWORK</h3>
+                <p>Hệ thống máy chủ giải trí Minecraft đa cụm cao cấp<br>Phát triển bền vững, đồng bộ đa nền tảng.</p>
+            </div>
+
+            <div class="footer-brand">
+                <h3>Bản Quyền</h3>
+                <p>
+                    © 2026 FurrMC Network<br>
+                    Website được phát triển và khởi chạy bởi EvB_Nghia.</p> ngày 20 tháng 5 năm 2026.
+                </p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // TẠO TINH THỂ PHÉP THUẬT MƯỢT MÀ
+        const particleContainer = document.getElementById('magic-particles');
+        const totalParticles = 20; 
+
+        for (let i = 0; i < totalParticles; i++) {
+            createShard();
+        }
+
+        function createShard() {
+            const shard = document.createElement('div');
+            shard.className = 'shard';
+            
+            const size = Math.random() * 8 + 4;
+            shard.style.width = `${size}px`;
+            shard.style.height = `${size}px`;
+            shard.style.left = `${Math.random() * 100}%`;
+            
+            const duration = Math.random() * 8 + 7;
+            shard.style.animationDuration = `${duration}s`;
+            shard.style.animationDelay = `${Math.random() * -15}s`;
+            
+            particleContainer.appendChild(shard);
+
+            shard.addEventListener('animationiteration', () => {
+                shard.style.left = `${Math.random() * 100}%`;
+            });
+        }
+
+        // VỆT SÁNG THEO CON TRỎ
+        const cursorGlow = document.querySelector('.cursor-glow');
+        let mouseX = 0, mouseY = 0;
+        let ballX = 0, ballY = 0;
+
+        document.addEventListener('mousemove', (e) => {
+            mouseX = e.clientX;
+            mouseY = e.clientY;
+        });
+
+        function animateCursor() {
+            ballX += (mouseX - ballX) * 0.1;
+            ballY += (mouseY - ballY) * 0.1;
+            cursorGlow.style.left = ballX + 'px';
+            cursorGlow.style.top = ballY + 'px';
+            requestAnimationFrame(animateCursor);
+        }
+        animateCursor();
+
+        // XỬ LÝ SAO CHÉP IP KHÔNG DÙNG TEXTAREA CŨ
+        function copyText(text) {
+            if (navigator.clipboard && window.isSecureContext) {
+                navigator.clipboard.writeText(text)
+                    .then(() => showToast("Đã sao chép liên kết máy chủ: " + text))
+                    .catch(() => fallbackCopy(text));
+            } else {
+                fallbackCopy(text);
+            }
+        }
+
+        function fallbackCopy(text) {
+            const textarea = document.createElement("textarea");
+            textarea.value = text;
+            textarea.style.position = "fixed"; 
+            textarea.style.opacity = "0";
+            document.body.appendChild(textarea);
+            textarea.select();
+            try {
+                document.execCommand("copy");
+                showToast("Đã sao chép liên kết máy chủ: " + text);
+            } catch (err) {
+                console.error("Không thể sao chép");
+            }
+            document.body.removeChild(textarea);
+        }
+
+        function showToast(message) {
+            const oldToast = document.querySelector('.copy-toast');
+            if (oldToast) oldToast.remove();
+
+            const toast = document.createElement('div');
+            toast.className = 'copy-toast';
+            toast.innerText = message;
+            document.body.appendChild(toast);
+
+            setTimeout(() => toast.classList.add('show'), 50);
+
+            setTimeout(() => {
+                toast.classList.remove('show');
+                setTimeout(() => toast.remove(), 300);
+            }, 2000);
+        }
+
+        document.querySelectorAll('.copy-btn').forEach((button) => {
+            button.addEventListener('click', (e) => {
+                e.preventDefault();
+                if (button.closest('.mode-card.disabled-status')) return;
+                copyText(button.getAttribute('data-copy'));
+            });
+        });
+
+        // HỆ THỐNG PHÁT NHẠC THÔNG MINH, TRÁNH LỖI TRÌNH DUYỆT BẢO MẬT
+        const audio = document.getElementById('bg-audio');
+        const musicToggle = document.getElementById('music-toggle');
+        audio.volume = 0.35; 
+
+        if (localStorage.getItem('musicState') !== 'paused') {
+            localStorage.setItem('musicState', 'playing');
+        }
+
+        function tryPlayMusic() {
+            if (localStorage.getItem('musicState') === 'playing' && audio.paused) {
+                audio.play().then(() => {
+                    musicToggle.innerText = '🔊';
+                    removeInteractionListeners();
+                }).catch(() => {});
+            } else if (localStorage.getItem('musicState') === 'paused') {
+                musicToggle.innerText = '🔇';
+            }
+        }
+
+        function removeInteractionListeners() {
+            const events = ['click', 'scroll', 'touchstart', 'keydown'];
+            events.forEach(event => window.removeEventListener(event, tryPlayMusic));
+        }
+
+        const interactionEvents = ['click', 'scroll', 'touchstart', 'keydown'];
+        interactionEvents.forEach(event => window.addEventListener(event, tryPlayMusic, { passive: true }));
+
+        musicToggle.addEventListener('click', (e) => {
+            e.stopPropagation(); 
+            if (audio.paused) {
+                audio.play().then(() => {
+                    musicToggle.innerText = '🔊';
+                    localStorage.setItem('musicState', 'playing'); 
+                });
+            } else {
+                audio.pause();
+                musicToggle.innerText = '🔇';
+                localStorage.setItem('musicState', 'paused');  
+            }
+        });
+
+        // THEO DÕI SCROLL ĐỂ LÀM NỔI BẬT THANH MENU KHÔNG LO LỖI HEADER
+        const sections = document.querySelectorAll('section[id]');
+        const navLinks = document.querySelectorAll('.island-nav a');
+
+        window.addEventListener('scroll', () => {
+            let current = '';
+            sections.forEach(section => {
+                const sectionTop = section.offsetTop;
+                if (pageYOffset >= sectionTop - 120) {
+                    current = section.getAttribute('id');
+                }
+            });
+
+            navLinks.forEach(link => {
+                link.classList.remove('active');
+                if (link.getAttribute('href').includes(current) && current !== '') {
+                    link.classList.add('active');
+                }
+            });
+            if(pageYOffset < 300 && navLinks.length > 0) {
+                navLinks[0].classList.add('active');
+            }
+        }, { passive: true });
+    </script>
+</body>
+
+</html>
