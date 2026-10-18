@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <meta name="theme-color" content="#000005" />
+  <title>💖 For Dyn ✨</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+  <!-- ══════════ LANDING SCREEN ══════════ -->
+  <div id="landing" class="landing">
+    <div class="landing-stars"></div>
+    <div class="landing-content">
+      <div class="landing-ornament">✦ ✧ ✦</div>
+      <h1 class="landing-title">For <span>Dyn</span></h1>
+      <p class="landing-sub">
+        <span>♡</span> A gift from the universe <span>♡</span>
+      </p>
+      <button id="startBtn" class="start-btn">
+        <span class="btn-glow"></span>
+        <span class="btn-text">💖 Tap to begin 💖</span>
+      </button>
+      <p class="landing-hint">♪ Bật âm thanh để có trải nghiệm trọn vẹn ♪</p>
+    </div>
+  </div>
+
+  <!-- ══════════ EXPERIENCE ══════════ -->
+  <div id="experience" class="experience">
+    <canvas id="webgl"></canvas>
+    <div id="floatingText" class="floating-text"></div>
+
+    <div id="lyrics" class="lyrics"></div>
+
+    <div id="messagePopup" class="message-popup"></div>
+
+    <div class="hint-bottom">
+      <span>✦</span> chạm vào những trái tim nhỏ quanh vũ trụ <span>✦</span>
+    </div>
+  </div>
+
+  <!-- ══════════ AUDIO ══════════ -->
+  <audio id="bgMusic" preload="auto" loop>
+    <source src="assets/music.mp3" type="audio/mpeg" />
+  </audio>
+
+  <!-- ══════════ THREE.JS IMPORT MAP ══════════ -->
+  <script type="importmap">
+    {
+      "imports": {
+        "three": "https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js",
+        "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/"
+      }
+    }
+  </script>
+  <script type="module" src="script.js"></script>
+</body>
+</html>
